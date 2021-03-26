@@ -1,0 +1,25 @@
+{% set title = "Main" %}
+{% set route = "home" %}
+
+{% extends "layouts/_layout.html" %}
+{% import "data/data.html" as items %}
+
+{% block content %}
+
+  <div id="scroll-container" class="container">
+    <div class="cols">
+      <div class="img-wrapper img-1">
+        <img class="js-gl-img" src="./img/1.jpg" alt="">
+        <img class="img-c" src="./img/1-c.jpg" alt="">
+      </div>
+      <div class="img-wrapper img-2">
+        <img class="js-gl-img" src="./img/2.jpg" alt="">
+        <img class="img-c" src="./img/2-c.jpg" alt="">
+      </div>
+      <div class="img-wrapper img-3">
+        <img class="js-gl-img" src="./img/3.jpg" alt="">
+        <img class="img-c" src="./img/3-c.jpg" alt="">
+      </div>
+    </div>
+  </div>
+{% endblock %}

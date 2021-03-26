@@ -1,0 +1,101 @@
+* {
+  &::selection {
+    color: white;
+    background: $accent;
+  }
+}
+
+body {
+  @include reg;
+  // color: white;
+  line-height: 1.5em;
+  font-size: size(20, 16);
+  // height: 100vh;
+  // overflow: hidden;
+  // background: $black;
+  overflow: hidden;
+  height: 100vh;
+}
+
+#scroll-container {
+  padding-top: 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100vh;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: 810px 903px;
+  grid-template-rows: 1fr 1fr;
+  grid-row-gap: 10vh;
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+
+.js-hidden {
+  opacity: 0;
+}
+
+img {
+  position: relative;
+}
+
+.img-c {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.img-1 {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  object-fit: cover;
+  position: relative;
+  img {
+    max-width: 100%;
+    display: block;
+  }
+}
+
+.img-2 {
+  object-fit: cover;
+  width: 50%;
+  justify-self: end;
+  position: relative;
+  img {
+    max-width: 100%;
+    display: block;
+  }
+}
+
+.img-3 {
+  margin-top: 20px;
+  grid-column-start: 2;
+  width: 50%;
+  object-fit: cover;
+  position: relative;
+  img {
+    max-width: 100%;
+    display: block;
+  }
+}
+
+#gl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.text {
+  max-width: 300px;
+  position: absolute;
+  top: 400px;
+  right: 100px;
+}
