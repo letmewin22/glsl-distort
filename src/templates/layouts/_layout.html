@@ -2,8 +2,8 @@
 {% import "partials/_mixins.html" as mixins %}
 <body>
     <!-- BEGIN content -->
-    <div class="site-wrapper" data-router-wrapper data-scroll>
-      <div data-scroll-content data-router-view="{% if route %}{{ route }}{% else %}Template{% endif %}">
+    <div class="site-wrapper" data-router-wrapper>
+      <div data-router-view="{% if route %}{{ route }}{% else %}Template{% endif %}">
         {% block content %}{% endblock %}
         <!-- END content -->
     </div>

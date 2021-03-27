@@ -28,12 +28,12 @@ export default class Figure {
 
   uploadTextures() {
     const p1 = new Promise((resolve) => {
-      this.image = this.loader.load(this.$img.getAttribute('src'), () => {
+      this.texture = this.loader.load(this.$img.getAttribute('src'), () => {
         resolve()
       })
     })
     const p2 = new Promise((resolve) => {
-      this.image2 = this.loader.load(this.$img.dataset.secondImage, () => {
+      this.texture2 = this.loader.load(this.$img.dataset.secondImage, () => {
         resolve()
       })
     })
@@ -45,13 +45,13 @@ export default class Figure {
     await this.uploadTextures()
     this.rendering = true
 
-    this.$img.classList.add('js-hidden')
+    // this.$img.classList.add('js-hidden')
 
     this.geometry = new THREE.PlaneBufferGeometry(1, 1, 1, 1)
 
     const uniforms = {
-      uTexture: {type: 't', value: this.image},
-      uColorTexture: {type: 't', value: this.image2},
+      uTexture: {type: 't', value: this.texture},
+      uColorTexture: {type: 't', value: this.texture2},
       uResolution: {
         type: 'v2',
         value: new THREE.Vector2(
@@ -90,16 +90,17 @@ export default class Figure {
     this.scene.add(this.mesh)
   }
 
-  getSizes(currentScroll = 0) {
+  getSizes(pos = 0) {
     if (!this.rendering) {
       return
     }
     const {width, height, top, left} = this.getBoundingTexture
+
+    const ww = window.innerWidth
+    const wh = window.innerHeight
+
     this.sizes.set(width, height)
-    this.offset.set(
-      left - window.innerWidth / 2 + width / 2,
-      currentScroll + window.innerHeight / 2 - top - height / 2,
-    )
+    this.offset.set(left - ww / 2 + width / 2, pos + wh / 2 - top - height / 2)
   }
 
   get getBoundingTexture() {
@@ -113,8 +114,8 @@ export default class Figure {
       return
     }
     this.time++
-    const m = this.mesh?.material?.uniforms
-    if (m) m.uTime.value = this.time
+    const m = this.mesh.material.uniforms
+    m.uTime.value = this.time
   }
 
   resize() {
@@ -132,14 +133,17 @@ export default class Figure {
   mouseClick() {
     gsap.to(this.$img, {
       duration: 1,
-      width: 300,
-      height: 400,
+      width: 600,
+      height: 300,
       overwrite: true,
       ease: 'power3.inOut',
     })
   }
 
   mouseEnter() {
+    if (!this.rendering) {
+      return
+    }
     gsap.to(this.mesh.material.uniforms.uDistortion, {
       duration: 1.8,
       value: 1,
@@ -162,6 +166,9 @@ export default class Figure {
   }
 
   mouseLeave() {
+    if (!this.rendering) {
+      return
+    }
     gsap.to(this.mesh.material.uniforms.uDistortion, {
       duration: 1.8,
       value: 0,
@@ -181,5 +188,18 @@ export default class Figure {
       overwrite: true,
       ease: 'power4.out',
     })
+  }
+
+  destroy() {
+    this.$img.removeEventListener('mouseenter', this.mouseEnter)
+    this.$img.removeEventListener('mouseleave', this.mouseLeave)
+    this.$img.removeEventListener('click', this.mouseClick)
+
+    this.scene.remove(this.mesh)
+
+    this.geometry.dispose()
+    this.material.dispose()
+    this.texture.dispose()
+    this.texture2.dispose()
   }
 }
