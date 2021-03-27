@@ -15,6 +15,7 @@ body {
   // background: $black;
   overflow: hidden;
   height: 100vh;
+  background-color: #d7d8dd;
 }
 
 #scroll-container {
@@ -26,7 +27,7 @@ body {
 
 .cols {
   display: grid;
-  grid-template-columns: 810px 903px;
+  grid-template-columns: 45% 50%;
   grid-template-rows: 1fr 1fr;
   grid-row-gap: 10vh;
   margin-top: 100px;
@@ -59,6 +60,7 @@ img {
   img {
     max-width: 100%;
     display: block;
+    object-fit: cover;
   }
 }
 
@@ -70,6 +72,7 @@ img {
   img {
     max-width: 100%;
     display: block;
+    object-fit: cover;
   }
 }
 
@@ -82,6 +85,7 @@ img {
   img {
     max-width: 100%;
     display: block;
+    object-fit: cover;
   }
 }
 

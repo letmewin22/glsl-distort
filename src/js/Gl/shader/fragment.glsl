@@ -13,7 +13,10 @@ float Sphere(vec2 uv, float r, float blur) {
 }
 
 void main() {
-	vec2 newUv = vUv - 0.5;
+
+  vec2 uv = vUv;
+
+	vec2 newUv = uv - 0.5;
 	vec2 uv2 = newUv - newUv * 0.5 * (1. - uScale);
 
 	vec4 circleDist = vec4(vec3(Sphere(uv2, uDistortion, 0.15)), 1.0);
@@ -24,7 +27,7 @@ void main() {
 	float roundblend = sin(PI*circleDist.r);
 	float roundblend2 = sin(PI*uScale);
 
-	vec4 bwTexture = texture2D(uTexture, vUv);
+	vec4 bwTexture = texture2D(uTexture, uv);
 	vec4 colorTexture = texture2D(uColorTexture, uv2 * circleDist.r + 0.5);
 
 	vec4 mixTexture = mix(colorTexture, bwTexture, 1.0 - circleDist);

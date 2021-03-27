@@ -4,10 +4,9 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import Figure from './Figure'
 
 export default class Scene {
-  constructor($selector, $imgs = [], $cimgs = []) {
+  constructor($selector, $imgs = []) {
     this.$container = document.querySelector($selector)
     this.$imgs = $imgs
-    this.$cimgs = $cimgs
 
     this.sizes = {
       w: window.innerWidth,
@@ -44,8 +43,8 @@ export default class Scene {
 
     this.$container.appendChild(this.renderer.domElement)
 
-    this.$imgs.forEach((img, i) => {
-      const figureIns = new Figure(this.scene, img, this.$cimgs[i])
+    this.$imgs.forEach((img) => {
+      const figureIns = new Figure(this.scene, img)
       this.figures.push(figureIns)
     })
   }
