@@ -48,6 +48,8 @@ img {
   img {
     max-width: 100%;
     display: block;
+    width: 610px;
+    height: 610px;
     object-fit: cover;
   }
 }
@@ -90,4 +92,8 @@ img {
   position: absolute;
   top: 400px;
   right: 100px;
+}
+
+.js-cloned {
+  pointer-events: none;
 }

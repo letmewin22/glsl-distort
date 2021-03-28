@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import gsap from 'gsap'
+import {cloneNode} from '@/utils/cloneNode'
 
 import vertex from './shader/vertex.glsl'
 import fragment from './shader/fragment.glsl'
@@ -45,9 +46,9 @@ export default class Figure {
     await this.uploadTextures()
     this.rendering = true
 
-    // this.$img.classList.add('js-hidden')
+    this.$img.classList.add('js-hidden')
 
-    this.geometry = new THREE.PlaneBufferGeometry(1, 1, 1, 1)
+    this.geometry = new THREE.PlaneBufferGeometry(1, 1, 64, 64)
 
     const uniforms = {
       uTexture: {type: 't', value: this.texture},
@@ -70,6 +71,8 @@ export default class Figure {
       uState: {value: 0},
       uDistortion: {value: 0},
       uScale: {value: 0},
+      uClicked: {value: 0},
+      uOffset: {value: new THREE.Vector2(0, 0)},
     }
     this.material = new THREE.ShaderMaterial({
       extensions: {
@@ -131,13 +134,64 @@ export default class Figure {
   }
 
   mouseClick() {
-    gsap.to(this.$img, {
-      duration: 1,
-      width: 600,
-      height: 300,
-      overwrite: true,
-      ease: 'power3.inOut',
-    })
+    cloneNode(this.$img)
+    const tl = gsap.timeline()
+
+    // tl.to(
+    //   this.$img,
+    //   {
+    //     duration: 1.5,
+    //     width: 1126,
+    //     height: 684,
+    //     top: 300,
+    //     left: 85,
+    //     ease: 'power2.inOut',
+    //   },
+    //   0.2,
+    // )
+    tl.to(
+      this.$img,
+      {
+        duration: 1.5,
+        width: 1920,
+        height: 969,
+        top: 0,
+        left: 0,
+        ease: 'power2.inOut',
+      },
+      0.2,
+    )
+    tl.to(
+      this.mesh.material.uniforms.uClicked,
+      {
+        duration: 1.5,
+        value: 1,
+        ease: 'power2.inOut',
+      },
+      0.2,
+    )
+    tl.to(
+      this.mesh.material.uniforms.uClicked,
+      {
+        duration: 1.5,
+        value: 0,
+        delay: 0.75,
+        ease: 'power2.inOut',
+      },
+      0.2,
+    )
+    tl.to(
+      this.mesh.material.uniforms.uOffset.value,
+      {
+        duration: 1.5,
+        x: 1,
+        y: 1,
+        // overwrite: true,
+        ease: 'power2.inOut',
+      },
+      0.2,
+    )
+    this.$img.removeEventListener('mouseleave', this.mouseLeave)
   }
 
   mouseEnter() {
