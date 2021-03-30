@@ -1,9 +1,26 @@
 import * as THREE from 'three'
 import gsap from 'gsap'
+import CustomEase from 'gsap/dist/CustomEase'
+
+import emitter from 'tiny-emitter/instance'
 import {cloneNode} from '@/utils/cloneNode'
 
-import vertex from './shader/vertex.glsl'
+import vertex from './shader/vertex2.glsl'
 import fragment from './shader/fragment.glsl'
+
+gsap.registerPlugin(CustomEase)
+
+const ease = CustomEase.create(
+  'custom',
+  `M0,0 C0.097,0 
+  0.151,0.006 0.186,0.019 
+  0.227,0.034 0.255,0.045 
+  0.288,0.078 0.367,0.157 
+  0.46,0.355 0.502,0.504 
+  0.551,0.679 0.594,0.816 
+  0.654,0.882 0.726,0.961 
+  0.734,1 1,1`,
+)
 
 export default class Figure {
   sizes = new THREE.Vector2(0, 0)
@@ -48,7 +65,7 @@ export default class Figure {
 
     this.$img.classList.add('js-hidden')
 
-    this.geometry = new THREE.PlaneBufferGeometry(1, 1, 64, 64)
+    this.geometry = new THREE.PlaneBufferGeometry(1, 1, 128, 128)
 
     const uniforms = {
       uTexture: {type: 't', value: this.texture},
@@ -68,11 +85,9 @@ export default class Figure {
         ),
       },
       uTime: {value: 0},
-      uState: {value: 0},
       uDistortion: {value: 0},
       uScale: {value: 0},
       uClicked: {value: 0},
-      uOffset: {value: new THREE.Vector2(0, 0)},
     }
     this.material = new THREE.ShaderMaterial({
       extensions: {
@@ -135,62 +150,32 @@ export default class Figure {
 
   mouseClick() {
     cloneNode(this.$img)
-    const tl = gsap.timeline()
+    emitter.emit('updateImages')
 
-    // tl.to(
-    //   this.$img,
-    //   {
-    //     duration: 1.5,
-    //     width: 1126,
-    //     height: 684,
-    //     top: 300,
-    //     left: 85,
-    //     ease: 'power2.inOut',
-    //   },
-    //   0.2,
-    // )
-    tl.to(
-      this.$img,
-      {
-        duration: 1.5,
-        width: 1920,
-        height: 969,
-        top: 0,
-        left: 0,
-        ease: 'power2.inOut',
-      },
-      0.2,
-    )
+    const tl = gsap.timeline()
+    const duration = 1.6
+
+    tl.to(this.$img, {
+      duration,
+      width: 1126,
+      height: 684,
+      top: 500,
+      left: 85,
+      ease,
+    })
+
     tl.to(
       this.mesh.material.uniforms.uClicked,
       {
-        duration: 1.5,
+        duration,
         value: 1,
-        ease: 'power2.inOut',
+        ease,
       },
-      0.2,
+      0,
     )
-    tl.to(
-      this.mesh.material.uniforms.uClicked,
-      {
-        duration: 1.5,
-        value: 0,
-        delay: 0.75,
-        ease: 'power2.inOut',
-      },
-      0.2,
-    )
-    tl.to(
-      this.mesh.material.uniforms.uOffset.value,
-      {
-        duration: 1.5,
-        x: 1,
-        y: 1,
-        // overwrite: true,
-        ease: 'power2.inOut',
-      },
-      0.2,
-    )
+
+    this.mouseEnter()
+
     this.$img.removeEventListener('mouseleave', this.mouseLeave)
   }
 
@@ -198,24 +183,25 @@ export default class Figure {
     if (!this.rendering) {
       return
     }
+
     gsap.to(this.mesh.material.uniforms.uDistortion, {
-      duration: 1.8,
+      duration: 1.6,
       value: 1,
       overwrite: true,
-      ease: 'power3.inOut',
+      ease,
     })
     gsap.to(document.body, {
-      duration: 1.8,
+      duration: 1.6,
       background: this.$img.dataset.color,
       overwrite: true,
-      ease: 'power3.inOut',
+      ease,
     })
     gsap.to(this.mesh.material.uniforms.uScale, {
-      duration: 1.7,
+      duration: 1.5,
       value: 1,
       delay: 0.1,
       overwrite: true,
-      ease: 'power3.inOut',
+      ease,
     })
   }
 
@@ -248,6 +234,7 @@ export default class Figure {
     this.$img.removeEventListener('mouseenter', this.mouseEnter)
     this.$img.removeEventListener('mouseleave', this.mouseLeave)
     this.$img.removeEventListener('click', this.mouseClick)
+    this.$img.classList.remove('js-hidden')
 
     this.scene.remove(this.mesh)
 

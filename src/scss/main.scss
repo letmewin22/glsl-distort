@@ -97,3 +97,10 @@ img {
 .js-cloned {
   pointer-events: none;
 }
+
+.range {
+  position: fixed;
+  top: 3%;
+  right: 3%;
+  z-index: 1000000;
+}

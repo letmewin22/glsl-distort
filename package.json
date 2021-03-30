@@ -68,7 +68,7 @@
     "@babel/polyfill": "^7.10.1",
     "@emotionagency/smoothscroll": "0.0.6",
     "@emotionagency/utils": "0.0.6",
-    "gsap": "^3.3.4",
+    "gsap": "npm:@gsap/member@^3.6.1",
     "imagesloaded": "^4.1.4",
     "rolly.js": "^0.4.0",
     "three": "^0.119.1",

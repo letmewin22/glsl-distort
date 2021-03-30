@@ -1,5 +1,7 @@
 import * as THREE from 'three'
+import gsap from 'gsap'
 import {raf, resize} from '@emotionagency/utils'
+import emitter from 'tiny-emitter/instance'
 
 import Figure from './Figure'
 import BaseScene from './BaseScene'
@@ -30,6 +32,10 @@ export default class Scene extends BaseScene {
       const figureIns = new Figure(this.scene, img)
       this.figures.push(figureIns)
     })
+
+    emitter.on('updateImages', () => {
+      this.updateImages()
+    })
   }
 
   setupCamera() {
@@ -42,7 +48,7 @@ export default class Scene extends BaseScene {
       this.fov,
       this.sizes.w / this.sizes.h,
       0.01,
-      1000,
+      10000,
     )
 
     this.camera.position.set(0, 0, this.perspective)
@@ -68,6 +74,15 @@ export default class Scene extends BaseScene {
       figure.update()
     })
     super.animate()
+  }
+
+  updateImages() {
+    this.$imgs.forEach(($img, i) => {
+      if (!$img.classList.contains('js-cloned')) {
+        this.figures[i].destroy()
+        gsap.to($img, {duration: 1, opacity: 0})
+      }
+    })
   }
 
   destroy() {
