@@ -1,22 +1,9 @@
 import gsap from 'gsap'
-import CustomEase from 'gsap/dist/CustomEase'
 
 import emitter from 'tiny-emitter/instance'
-import {cloneNode} from '@/utils/cloneNode'
+import {cloneNode} from '../utils/cloneNode'
 
-gsap.registerPlugin(CustomEase)
-
-export const ease = CustomEase.create(
-  'custom',
-  `M0,0 C0.097,0 
-  0.151,0.006 0.186,0.019 
-  0.227,0.034 0.255,0.045 
-  0.288,0.078 0.367,0.157 
-  0.46,0.355 0.502,0.504 
-  0.551,0.679 0.594,0.816 
-  0.654,0.882 0.726,0.961 
-  0.734,1 1,1`,
-)
+export const ease = 'power2.out'
 
 export class FigureMouse {
   constructor(instance) {
@@ -58,9 +45,6 @@ export class FigureMouse {
       top,
       left,
       ease,
-      onUpdate: () => {
-        this.instance.proxy.progress += 1
-      },
       onComplete: () => {
         to.appendChild(this.instance.$img)
         this.instance.$img.style.position = 'static'
@@ -68,18 +52,18 @@ export class FigureMouse {
     })
 
     tl.to(
-      this.instance.mesh.material.uniforms.uClicked,
+      this.instance.material.uniforms.uClicked,
       {
         duration,
         value: 1,
         ease,
       },
-      0,
+      0
     )
 
     this.mouseEnter()
 
-    gsap.to(this.instance.mesh.material.uniforms.uLongScale, {
+    gsap.to(this.instance.material.uniforms.uLongScale, {
       duration: 1,
       value: 0,
       delay: 0,
@@ -95,7 +79,7 @@ export class FigureMouse {
       return
     }
 
-    gsap.to(this.instance.mesh.material.uniforms.uDistortion, {
+    gsap.to(this.instance.material.uniforms.uDistortion, {
       duration: 1.6,
       value: 1,
       overwrite: true,
@@ -107,14 +91,14 @@ export class FigureMouse {
     //   overwrite: true,
     //   ease,
     // })
-    gsap.to(this.instance.mesh.material.uniforms.uScale, {
+    gsap.to(this.instance.material.uniforms.uScale, {
       duration: 1.5,
       value: 1,
       delay: 0.1,
       overwrite: true,
       ease,
     })
-    gsap.to(this.instance.mesh.material.uniforms.uLongScale, {
+    gsap.to(this.instance.material.uniforms.uLongScale, {
       duration: 10,
       value: 0,
       overwrite: true,
@@ -126,20 +110,20 @@ export class FigureMouse {
     if (!this.instance.rendering) {
       return
     }
-    gsap.to(this.instance.mesh.material.uniforms.uDistortion, {
+    gsap.to(this.instance.material.uniforms.uDistortion, {
       duration: 1.8,
       value: 0,
       overwrite: true,
       ease: 'power4.out',
     })
-    gsap.to(this.instance.mesh.material.uniforms.uScale, {
+    gsap.to(this.instance.material.uniforms.uScale, {
       duration: 2,
       value: 0,
       delay: 0,
       overwrite: true,
       ease: 'power4.out',
     })
-    gsap.to(this.instance.mesh.material.uniforms.uLongScale, {
+    gsap.to(this.instance.material.uniforms.uLongScale, {
       duration: 2,
       value: 0.1,
       delay: 0,

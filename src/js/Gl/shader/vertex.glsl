@@ -8,6 +8,7 @@ uniform float uTime;
 uniform float uClicked;
 uniform float uScale;
 
+#define PI 3.14159265359
 
 void main() {
   vec3 pos = position; 
@@ -16,7 +17,7 @@ void main() {
 
   float speed = uTime * 0.1;
   float activator = uClicked;
-  float roundblend = sin(M_PI*activator);
+  float roundblend = sin(PI*activator);
 
   float maxDistance = distance(vec2(0.),vec2(0.5));
   float dist = distance(vec2(0.), uv-0.5);

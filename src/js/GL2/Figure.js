@@ -1,68 +1,63 @@
-import * as THREE from 'three'
-
-import vertex from './shader/vertex2.glsl'
-import fragment from './shader/fragment.glsl'
-
+import {Plane, Program, Mesh, TextureLoader, Vec2} from 'ogl'
+import fragment from './shaders/fragment.glsl'
+import vertex from './shaders/vertex.glsl'
 import {FigureMouse} from './Figure.mouse'
 
 export default class Figure {
-  sizes = new THREE.Vector2(0, 0)
-  offset = new THREE.Vector2(0, 0)
+  sizes = new Vec2(0, 0)
+  offset = new Vec2(0, 0)
   time = 0
   rendering = false
 
-  constructor(scene, $img, proxy) {
+  constructor(scene, renderer, $img) {
     this.scene = scene
+    this.renderer = renderer
+    this.gl = this.renderer.gl
     this.$img = $img
-    this.proxy = proxy
 
     this.mouse = new FigureMouse(this)
     this.mouse.addEvents()
 
-    this.loader = new THREE.TextureLoader()
+    this.loader = TextureLoader
     this.createMesh()
-
-    document.querySelector('.range').addEventListener('input', (e) => {
-      this.mesh.material.uniforms.uHide.value = e.target.value
-    })
   }
 
   uploadTextures() {
-    const p1 = new Promise((resolve) => {
-      this.texture = this.loader.load(this.$img.getAttribute('src'), () => {
-        resolve()
-      })
-    })
-    const p2 = new Promise((resolve) => {
-      this.texture2 = this.loader.load(this.$img.dataset.secondImage, () => {
-        resolve()
-      })
+    this.texture = this.loader.load(this.gl, {
+      src: this.$img.getAttribute('src'),
     })
 
-    return Promise.all([p1, p2])
+    this.texture2 = this.loader.load(this.gl, {
+      src: this.$img.dataset.secondImage,
+    })
   }
 
-  async createMesh() {
-    await this.uploadTextures()
+  createMesh() {
+    this.uploadTextures()
     this.rendering = true
 
     this.$img.classList.add('js-hidden')
 
-    this.geometry = new THREE.PlaneBufferGeometry(1, 1, 128, 128)
+    this.geometry = new Plane(this.renderer.gl, {
+      width: 1,
+      height: 1,
+      widthSegments: 128,
+      heightSegments: 128,
+    })
 
     const uniforms = {
       uTexture: {type: 't', value: this.texture},
       uColorTexture: {type: 't', value: this.texture2},
       uResolution: {
         type: 'v2',
-        value: new THREE.Vector2(
+        value: new Vec2(
           this.getBoundingTexture.naturalWidth,
           this.getBoundingTexture.naturalHeight,
         ),
       },
       uSize: {
         type: 'v2',
-        value: new THREE.Vector2(
+        value: new Vec2(
           this.getBoundingTexture.width,
           this.getBoundingTexture.height,
         ),
@@ -74,23 +69,29 @@ export default class Figure {
       uClicked: {value: 0},
       uHide: {value: 0},
     }
-    this.material = new THREE.ShaderMaterial({
+
+    this.material = new Program(this.renderer.gl, {
       extensions: {
         derivatives: '#extension GL_OES_standard_derivatives : enable',
       },
-      uniforms,
-      vertexShader: vertex,
-      fragmentShader: fragment,
+      vertex,
+      fragment,
       transparent: true,
-      side: THREE.DoubleSide,
+      cullFace: null,
+      uniforms,
     })
-    this.mesh = new THREE.Mesh(this.geometry, this.material)
 
     this.setSizes()
 
+    this.mesh = new Mesh(this.renderer.gl, {
+      geometry: this.geometry,
+      program: this.material,
+    })
+
     this.mesh.position.set(this.offset.x, this.offset.y, 0)
     this.mesh.scale.set(this.sizes.x, this.sizes.y, this.sizes.x / 2)
-    this.scene.add(this.mesh)
+
+    this.mesh.setParent(this.scene)
   }
 
   setSizes() {
@@ -111,12 +112,13 @@ export default class Figure {
     const {naturalWidth, naturalHeight} = this.$img
     return {width, height, top, left, naturalWidth, naturalHeight}
   }
+
   update() {
     if (!this.rendering) {
       return
     }
     this.time++
-    const m = this.mesh.material.uniforms
+    const m = this.material.uniforms
     m.uTime.value = this.time
   }
 
@@ -128,19 +130,17 @@ export default class Figure {
     this.mesh.position.set(this.offset.x, this.offset.y, 0)
     this.mesh.scale.set(this.sizes.x, this.sizes.y, 1)
 
-    this.mesh.material.uniforms.uSize.value.x = this.getBoundingTexture.width
-    this.mesh.material.uniforms.uSize.value.y = this.getBoundingTexture.height
+    this.material.uniforms.uSize.value.x = this.getBoundingTexture.width
+    this.material.uniforms.uSize.value.y = this.getBoundingTexture.height
   }
 
   destroy() {
     this.mouse.removeEvents()
     this.$img.classList.remove('js-hidden')
 
-    this.scene.remove(this.mesh)
+    this.scene.removeChild(this.mesh)
 
-    this.geometry.dispose()
-    this.material.dispose()
-    this.texture.dispose()
-    this.texture2.dispose()
+    this.geometry.remove()
+    this.material.remove()
   }
 }

@@ -2,8 +2,10 @@ import * as THREE from 'three'
 import gsap from 'gsap'
 import {raf, resize} from '@emotionagency/utils'
 import emitter from 'tiny-emitter/instance'
+import {state} from '@emotionagency/smoothscroll'
 
 import Figure from './Figure'
+import {ease} from './Figure.mouse'
 import BaseScene from './BaseScene'
 
 export default class Scene extends BaseScene {
@@ -13,23 +15,35 @@ export default class Scene extends BaseScene {
     super($selector)
     this.$imgs = $imgs
 
-    this.init()
     this.bounds()
+    this.init()
     raf.on(this.animate)
     resize.on(this.resize)
   }
 
   bounds() {
-    ['animate', 'resize'].forEach((fn) => {
+    ['animate', 'resize', 'updatePos'].forEach((fn) => {
       this[fn] = this[fn].bind(this)
     })
   }
 
   init() {
     super.init()
+    const updatePos = this.updatePos
+
+    this.proxy = new Proxy(
+      {},
+      {
+        set(...args) {
+          const result = Reflect.set(...args)
+          updatePos()
+          return result
+        },
+      },
+    )
 
     this.$imgs.forEach((img) => {
-      const figureIns = new Figure(this.scene, img)
+      const figureIns = new Figure(this.scene, img, this.proxy)
       this.figures.push(figureIns)
     })
 
@@ -56,9 +70,9 @@ export default class Scene extends BaseScene {
     this.camera.lookAt(0, 0, 0)
   }
 
-  updatePos(pos) {
+  updatePos() {
     this.figures.forEach((figure) => {
-      figure.getSizes(pos)
+      figure.setSizes()
       figure.resize()
     })
   }
@@ -69,7 +83,11 @@ export default class Scene extends BaseScene {
   }
 
   animate() {
-    this.updatePos(document.querySelector('#scroll-container').scrollTop)
+    if (state.scrolling) {
+      this.proxy.scrollPosition = document.querySelector(
+        '#scroll-container',
+      ).scrollTop
+    }
     this.figures.forEach((figure) => {
       figure.update()
     })
@@ -77,10 +95,16 @@ export default class Scene extends BaseScene {
   }
 
   updateImages() {
+    const blocks = document.querySelectorAll('.img-wrapper')
     this.$imgs.forEach(($img, i) => {
       if (!$img.classList.contains('js-cloned')) {
-        this.figures[i].destroy()
-        gsap.to($img, {duration: 1, opacity: 0})
+        gsap.to(this.figures[i].mesh.material.uniforms.uHide, {
+          duration: 1.2,
+          value: 1,
+          ease,
+          onComplete: () => this.figures[i].destroy(),
+        })
+        gsap.to(blocks, {duration: 1.2, opacity: 0, ease})
       }
     })
   }
