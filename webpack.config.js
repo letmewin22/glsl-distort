@@ -3,7 +3,6 @@ const path = require('path')
 // const BundleAnalyzerPlugin =
 // require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
-
 function createConfig(env) {
   const isProduction = env === 'production'
 
@@ -16,13 +15,13 @@ function createConfig(env) {
     //   // app: ['@babel/polyfill', './src/js/app.js']
     // }, //If you need support IE11
     output: {
-      filename: 'app.js'
+      filename: 'app.js',
     },
     resolve: {
       extensions: ['.js'],
       alias: {
-        '@': path.resolve(__dirname, 'src/js')
-      }
+        '@': path.resolve(__dirname, 'src/js'),
+      },
     },
     module: {
       rules: [
@@ -34,48 +33,46 @@ function createConfig(env) {
           options: {
             fix: true,
             cache: true,
-            ignorePattern: __dirname + '/src/js/lib/'
-          }
+            ignorePattern: __dirname + '/src/js/lib/',
+          },
         },
         {
           test: /\.js$/,
           loader: 'babel-loader',
           exclude: '/node_modules/',
           options: {
-            cacheDirectory: true
-          }
+            cacheDirectory: true,
+          },
         },
         {
           test: /\.glsl$/,
           exclude: '/node_modules/',
-          loader: 'webpack-glsl-loader'
-        }
-      ]
+          loader: 'webpack-glsl-loader',
+        },
+      ],
     },
     mode: !isProduction ? 'development' : 'production',
-    devtool: !isProduction ?
-      'eval-cheap-module-source-map' :
-      false,
+    devtool: !isProduction ? 'eval-cheap-module-source-map' : false,
     optimization: {
-      minimize: isProduction
+      minimize: isProduction,
     },
     plugins: [
       new webpackReal.LoaderOptionsPlugin({
         options: {
           eslint: {
-            formatter: require('eslint-formatter-pretty')
-          }
-        }
+            formatter: require('eslint-formatter-pretty'),
+          },
+        },
       }),
-      new webpackReal.NoEmitOnErrorsPlugin()
-    ]
+      new webpackReal.NoEmitOnErrorsPlugin(),
+    ],
   }
 
   if (isProduction) {
     webpackConfig.plugins.push(
       new webpackReal.LoaderOptionsPlugin({
         minimize: true,
-      })
+      }),
     )
     // webpackConfig.plugins.push(
 

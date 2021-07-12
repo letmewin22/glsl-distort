@@ -10,13 +10,14 @@ export default class Scene extends BaseScene {
   figures = []
   $imgs = []
 
-  constructor($selector, $imgs = []) {
+  constructor($selector, $imgs = [], opts = {}) {
     super($selector)
     this.$imgs = $imgs
+    this.raf = opts.raf ?? raf
 
     this.bounds()
     this.init()
-    raf.on(this.animate)
+    this.raf.on(this.animate)
     resize.on(this.resize)
   }
 
@@ -79,11 +80,20 @@ export default class Scene extends BaseScene {
           duration: 1.2,
           value: 1,
           ease: 'power2.out',
-          // onComplete: () => this.figures[i].destroy(),
+          onComplete: () => this.figures[i].destroy(),
         })
         gsap.to(blocks, {duration: 1.2, opacity: 0, ease: 'power2.out'})
       }
     })
+  }
+
+  addImages(imgs) {
+    this.$imgs = imgs
+    this.$imgs.length &&
+      this.$imgs.forEach((img) => {
+        const figureIns = new Figure(this.scene, img)
+        this.figures.push(figureIns)
+      })
   }
 
   animate() {
@@ -95,5 +105,8 @@ export default class Scene extends BaseScene {
     this.figures.forEach((figure) => {
       figure.destroy()
     })
+
+    this.raf.off(this.animate)
+    resize.off(this.resize)
   }
 }

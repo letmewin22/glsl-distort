@@ -1,6 +1,4 @@
-precision highp float;
 varying vec2 vUv;
-
 
 uniform sampler2D uTexture;
 uniform sampler2D uColorTexture;
@@ -11,7 +9,6 @@ uniform float uClicked;
 uniform float uTime;
 uniform float uHide;
 
-#define PI 3.14159265359
 
 float Sphere(vec2 uv, float r, float blur) {
    float d = length(uv);

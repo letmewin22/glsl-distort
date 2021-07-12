@@ -50,6 +50,8 @@ export default class Figure {
 
     this.geometry = new THREE.PlaneBufferGeometry(1, 1, 128, 128)
 
+    console.log(this.geometry)
+
     const uniforms = {
       uTexture: {type: 't', value: this.texture},
       uColorTexture: {type: 't', value: this.texture2},
