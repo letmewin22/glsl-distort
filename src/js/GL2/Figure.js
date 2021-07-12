@@ -6,16 +6,16 @@ import fragment from './shaders/fragment.glsl'
 import vertex from './shaders/vertex.glsl'
 
 export default class Figure extends BaseFigure {
-  constructor(scene, renderer, $img) {
-    super(scene, renderer, $img)
+  constructor(scene, renderer, $el) {
+    super(scene, renderer, $el)
 
     this.mouse = new FigureMouse(this)
     this.mouse.addEvents()
   }
 
   async createMesh() {
-    this.texture = await this.uploadTexture(this.$img.dataset.src)
-    this.texture2 = await this.uploadTexture(this.$img.dataset.secondImage)
+    this.texture = await this.uploadTexture(this.$el.dataset.src)
+    this.texture2 = await this.uploadTexture(this.$el.dataset.secondImage)
 
     const uniforms = {
       uTexture: {type: 't', value: this.texture},

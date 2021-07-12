@@ -1,6 +1,6 @@
 import {Plane, Program, Mesh, Vec2} from 'ogl'
 import {TextureLoader} from './TextureLoader/TextureLoader'
-import {idGenerator} from './idGenerator'
+import {generateID} from './utils/generateID'
 
 // shaders
 import baseFragment from './baseShaders/fragment.glsl'
@@ -15,14 +15,14 @@ export default class BaseFigure {
   time = 0
   rendering = false
 
-  constructor(scene, renderer, $img) {
+  constructor(scene, renderer, $el) {
     this.scene = scene
     this.renderer = renderer
     this.gl = this.renderer.gl
-    this.$img = $img
-    this._id = idGenerator()
-    this.$img.setAttribute('data-gl-id', this._id)
-    console.log(this.$img)
+    this.$el = $el
+    this._id = generateID(12)
+    this.$el.setAttribute('data-gl-id', this._id)
+    console.log(this.$el)
 
     this.loader = new TextureLoader({gl: this.gl})
     this.createMesh()
@@ -39,7 +39,7 @@ export default class BaseFigure {
   createMesh(opts = {}) {
     this.rendering = true
 
-    this.$img.classList.add('js-hidden')
+    this.$el.classList.add('js-hidden')
 
     this.geometry = new Plane(this.renderer.gl, {
       width: 1,
@@ -105,8 +105,15 @@ export default class BaseFigure {
   }
 
   get getBoundingTexture() {
-    const {width, height, top, left} = this.$img.getBoundingClientRect()
-    const {naturalWidth, naturalHeight} = this.texture.image
+    const {width, height, top, left} = this.$el.getBoundingClientRect()
+    let naturalWidth
+    let naturalHeight
+
+    if (this.texture) {
+      naturalWidth = this.texture.image.naturalWidth
+      naturalHeight = this.texture.image.naturalHeight
+    }
+
     return {width, height, top, left, naturalWidth, naturalHeight}
   }
 
@@ -132,8 +139,8 @@ export default class BaseFigure {
   }
 
   destroy() {
-    this.$img.classList.remove('js-hidden')
-    this.$img.removeAttribute('data-gl-id')
+    this.$el.classList.remove('js-hidden')
+    this.$el.removeAttribute('data-gl-id')
 
     this.scene.removeChild(this.mesh)
 

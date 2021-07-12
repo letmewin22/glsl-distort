@@ -1,4 +1,4 @@
-export const idGenerator = (length = 12) => {
+export const generateID = (length = 8) => {
   let result = ''
   const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'

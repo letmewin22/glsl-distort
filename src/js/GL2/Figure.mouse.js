@@ -18,19 +18,19 @@ export class FigureMouse {
   }
 
   addEvents() {
-    this.instance.$img.addEventListener('mouseenter', this.mouseEnter)
-    this.instance.$img.addEventListener('mouseleave', this.mouseLeave)
-    this.instance.$img.addEventListener('click', this.mouseClick)
+    this.instance.$el.addEventListener('mouseenter', this.mouseEnter)
+    this.instance.$el.addEventListener('mouseleave', this.mouseLeave)
+    this.instance.$el.addEventListener('click', this.mouseClick)
   }
 
   removeEvents() {
-    this.instance.$img.removeEventListener('mouseenter', this.mouseEnter)
-    this.instance.$img.removeEventListener('mouseleave', this.mouseLeave)
-    this.instance.$img.removeEventListener('click', this.mouseClick)
+    this.instance.$el.removeEventListener('mouseenter', this.mouseEnter)
+    this.instance.$el.removeEventListener('mouseleave', this.mouseLeave)
+    this.instance.$el.removeEventListener('click', this.mouseClick)
   }
 
   mouseClick() {
-    cloneNode(this.instance.$img)
+    cloneNode(this.instance.$el)
     emitter.emit('animateImages')
     const to = document.querySelector('.to')
     const {width, height, top, left} = to.getBoundingClientRect()
@@ -38,7 +38,7 @@ export class FigureMouse {
     const tl = gsap.timeline()
     const duration = 1.6
 
-    tl.to(this.instance.$img, {
+    tl.to(this.instance.$el, {
       duration,
       width,
       height,
@@ -46,8 +46,8 @@ export class FigureMouse {
       left,
       ease,
       onComplete: () => {
-        to.appendChild(this.instance.$img)
-        this.instance.$img.style.position = 'static'
+        to.appendChild(this.instance.$el)
+        this.instance.$el.style.position = 'static'
       },
     })
 
@@ -71,7 +71,7 @@ export class FigureMouse {
       ease,
     })
 
-    this.instance.$img.removeEventListener('mouseleave', this.mouseLeave)
+    this.instance.$el.removeEventListener('mouseleave', this.mouseLeave)
   }
 
   mouseEnter() {
@@ -87,7 +87,7 @@ export class FigureMouse {
     })
     // gsap.to(document.body, {
     //   duration: 1.6,
-    //   background: this.instance.$img.dataset.color,
+    //   background: this.instance.$el.dataset.color,
     //   overwrite: true,
     //   ease,
     // })

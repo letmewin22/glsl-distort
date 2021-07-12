@@ -9,11 +9,11 @@ export {emitter}
 
 export default class Scetch extends DefaultScetch {
   figures = []
-  $imgs = []
+  $els = []
 
-  constructor($selector, $imgs = [], opts = {}) {
+  constructor($selector, $els = [], opts = {}) {
     super($selector)
-    this.$imgs = [...$imgs]
+    this.$els = [...$els]
     this.raf = opts.raf ?? raf
     this.Figure = opts.Figure ?? console.warn('Figure is not defined')
 
@@ -33,7 +33,7 @@ export default class Scetch extends DefaultScetch {
   init() {
     super.init()
 
-    this.$imgs.forEach((img) => {
+    this.$els.forEach((img) => {
       const figureIns = new this.Figure(this.scene, this.renderer, img)
       this.figures.push(figureIns)
     })
@@ -75,31 +75,31 @@ export default class Scetch extends DefaultScetch {
 
   animateImages() {
     const blocks = document.querySelectorAll('.img-wrapper')
-    this.$imgs.forEach(($img, i) => {
-      if (!$img.classList.contains('js-cloned')) {
+    this.$els.forEach(($el, i) => {
+      if (!$el.classList.contains('js-cloned')) {
         gsap.to(this.figures[i].material.uniforms.uHide, {
           duration: 1.2,
           value: 1,
           ease: 'power2.out',
-          onComplete: () => this.removeFigure($img.dataset.glId),
+          onComplete: () => this.removeFigure($el.dataset.glId),
         })
         gsap.to(blocks, {duration: 1.2, opacity: 0, ease: 'power2.out'})
       }
     })
   }
 
-  addFigures($imgs = []) {
-    this.$imgs = [...this.$imgs, ...$imgs]
+  addFigures($els = []) {
+    this.$els = [...this.$els, ...$els]
 
-    $imgs.length &&
-      $imgs.forEach((img) => {
+    $els.length &&
+      $els.forEach((img) => {
         const figureIns = new this.Figure(this.scene, this.renderer, img)
         this.figures.push(figureIns)
       })
   }
 
   removeFigure(id) {
-    this.$imgs = this.$imgs.filter(($img) => $img.dataset.glId !== id)
+    this.$els = this.$els.filter(($el) => $el.dataset.glId !== id)
 
     this.figures.find((f) => f._id === id).destroy()
     this.figures = this.figures.filter((f) => f._id !== id)
