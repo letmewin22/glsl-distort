@@ -3,17 +3,17 @@ import {resize, raf} from '@emotionagency/utils'
 import emitter from 'tiny-emitter/instance'
 import gsap from 'gsap'
 
-import BaseScene from './BaseScene'
+import DefaultScetch from './DefaultScetch'
 
 export {emitter}
 
-export default class Scene extends BaseScene {
+export default class Scetch extends DefaultScetch {
   figures = []
   $imgs = []
 
   constructor($selector, $imgs = [], opts = {}) {
     super($selector)
-    this.$imgs = $imgs
+    this.$imgs = [...$imgs]
     this.raf = opts.raf ?? raf
     this.Figure = opts.Figure ?? console.warn('Figure is not defined')
 
@@ -38,8 +38,8 @@ export default class Scene extends BaseScene {
       this.figures.push(figureIns)
     })
 
-    emitter.on('updateImages', () => {
-      this.updateImages()
+    emitter.on('animateImages', () => {
+      this.animateImages()
     })
   }
 
@@ -73,7 +73,7 @@ export default class Scene extends BaseScene {
     super.resize()
   }
 
-  updateImages() {
+  animateImages() {
     const blocks = document.querySelectorAll('.img-wrapper')
     this.$imgs.forEach(($img, i) => {
       if (!$img.classList.contains('js-cloned')) {
@@ -81,25 +81,29 @@ export default class Scene extends BaseScene {
           duration: 1.2,
           value: 1,
           ease: 'power2.out',
-          onComplete: () => this.figures[i].destroy(),
+          onComplete: () => this.removeFigure($img.dataset.glId),
         })
         gsap.to(blocks, {duration: 1.2, opacity: 0, ease: 'power2.out'})
       }
     })
   }
 
-  addImages(imgs) {
-    this.$imgs = imgs
-    this.$imgs.length &&
-      this.$imgs.forEach((img) => {
-        const figureIns = new this.Figure(this.scene, img)
+  addFigures($imgs = []) {
+    this.$imgs = [...this.$imgs, ...$imgs]
+
+    $imgs.length &&
+      $imgs.forEach((img) => {
+        const figureIns = new this.Figure(this.scene, this.renderer, img)
         this.figures.push(figureIns)
       })
   }
 
-  // removeImages() {
+  removeFigure(id) {
+    this.$imgs = this.$imgs.filter(($img) => $img.dataset.glId !== id)
 
-  // }
+    this.figures.find((f) => f._id === id).destroy()
+    this.figures = this.figures.filter((f) => f._id !== id)
+  }
 
   animate() {
     this.updatePos()

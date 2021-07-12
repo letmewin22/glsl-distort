@@ -1,6 +1,6 @@
 import {Renderer, Transform} from 'ogl'
 
-export default class BaseScene {
+export default class DefaultScetch {
   constructor($selector) {
     this.$container = document.querySelector($selector)
 

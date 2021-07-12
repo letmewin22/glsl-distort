@@ -1,5 +1,6 @@
 import {Plane, Program, Mesh, Vec2} from 'ogl'
 import {TextureLoader} from './TextureLoader/TextureLoader'
+import {idGenerator} from './idGenerator'
 
 // shaders
 import baseFragment from './baseShaders/fragment.glsl'
@@ -19,6 +20,9 @@ export default class BaseFigure {
     this.renderer = renderer
     this.gl = this.renderer.gl
     this.$img = $img
+    this._id = idGenerator()
+    this.$img.setAttribute('data-gl-id', this._id)
+    console.log(this.$img)
 
     this.loader = new TextureLoader({gl: this.gl})
     this.createMesh()
@@ -129,6 +133,7 @@ export default class BaseFigure {
 
   destroy() {
     this.$img.classList.remove('js-hidden')
+    this.$img.removeAttribute('data-gl-id')
 
     this.scene.removeChild(this.mesh)
 

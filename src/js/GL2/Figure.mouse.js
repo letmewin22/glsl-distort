@@ -31,7 +31,7 @@ export class FigureMouse {
 
   mouseClick() {
     cloneNode(this.instance.$img)
-    emitter.emit('updateImages')
+    emitter.emit('animateImages')
     const to = document.querySelector('.to')
     const {width, height, top, left} = to.getBoundingClientRect()
 
@@ -58,7 +58,7 @@ export class FigureMouse {
         value: 1,
         ease,
       },
-      0
+      0,
     )
 
     this.mouseEnter()

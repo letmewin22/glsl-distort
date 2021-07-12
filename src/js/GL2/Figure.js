@@ -1,3 +1,4 @@
+import gsap from 'gsap'
 import BaseFigure from '../dom-gl/BaseFigure'
 import {FigureMouse} from './Figure.mouse'
 
@@ -13,7 +14,7 @@ export default class Figure extends BaseFigure {
   }
 
   async createMesh() {
-    this.texture = await this.uploadTexture(this.$img.getAttribute('src'))
+    this.texture = await this.uploadTexture(this.$img.dataset.src)
     this.texture2 = await this.uploadTexture(this.$img.dataset.secondImage)
 
     const uniforms = {
@@ -24,10 +25,12 @@ export default class Figure extends BaseFigure {
       uScale: {value: 0},
       uLongScale: {value: 0.1},
       uClicked: {value: 0},
-      uHide: {value: 0},
+      uHide: {value: 1},
     }
 
     super.createMesh({uniforms, vertex, fragment})
+
+    gsap.to(this.material.uniforms.uHide, {duration: 1, value: 0})
   }
 
   destroy() {

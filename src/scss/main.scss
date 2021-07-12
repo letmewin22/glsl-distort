@@ -38,7 +38,7 @@ body {
   opacity: 0;
 }
 
-img {
+.img {
   position: relative;
 }
 
@@ -51,7 +51,7 @@ img {
   grid-column-start: 1;
   grid-column-end: 1;
   position: relative;
-  img {
+  .img {
     max-width: 100%;
     flex: 0 1 auto;
     display: block;
@@ -77,7 +77,7 @@ img {
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-end;
-  img {
+  .img {
     max-width: 100%;
     display: block;
     object-fit: cover;
@@ -98,7 +98,7 @@ img {
   object-fit: cover;
   position: relative;
   align-items: flex-end;
-  img {
+  .img {
     max-width: 100%;
     display: block;
     object-fit: cover;

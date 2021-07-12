@@ -1,11 +1,13 @@
 import cssWebP from '@/libs/testWebP'
-import Scene from './dom-gl/Scene'
+import Scetch from './dom-gl/Scetch'
 import Figure from './Gl2/Figure'
 import {SmoothScroll} from '@emotionagency/smoothscroll'
 
 cssWebP()
 const imgs = document.querySelectorAll('.js-gl-img')
 window.addEventListener('load', () => {
-  new SmoothScroll()
-  window.scene = new Scene('#gl', imgs, {Figure})
+  setTimeout(() => {
+    new SmoothScroll()
+    window.scetch = new Scetch('#gl', imgs, {Figure})
+  }, 500)
 })
