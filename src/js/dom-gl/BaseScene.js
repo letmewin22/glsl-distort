@@ -16,9 +16,10 @@ export default class BaseScene {
     this.scene = new Transform()
 
     this.renderer = new Renderer({
-      dpr: window.devicePixelRatio,
+      dpr: 2,
       antialias: true,
       alpha: true,
+      premultipliedAlpha: true,
     })
 
     this.setupCamera()

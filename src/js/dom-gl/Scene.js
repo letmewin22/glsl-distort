@@ -4,7 +4,8 @@ import emitter from 'tiny-emitter/instance'
 import gsap from 'gsap'
 
 import BaseScene from './BaseScene'
-import Figure from './Figure'
+
+export {emitter}
 
 export default class Scene extends BaseScene {
   figures = []
@@ -14,6 +15,7 @@ export default class Scene extends BaseScene {
     super($selector)
     this.$imgs = $imgs
     this.raf = opts.raf ?? raf
+    this.Figure = opts.Figure ?? console.warn('Figure is not defined')
 
     this.bounds()
     this.init()
@@ -32,7 +34,7 @@ export default class Scene extends BaseScene {
     super.init()
 
     this.$imgs.forEach((img) => {
-      const figureIns = new Figure(this.scene, this.renderer, img)
+      const figureIns = new this.Figure(this.scene, this.renderer, img)
       this.figures.push(figureIns)
     })
 
@@ -55,9 +57,8 @@ export default class Scene extends BaseScene {
       far: 10000,
     })
 
-    this.camera.position.x = 0
-    this.camera.position.y = 0
-    this.camera.position.z = this.perspective
+    this.camera.position.set(0, 0, this.perspective)
+    this.camera.lookAt([0, 0, 0])
   }
 
   updatePos() {
@@ -91,10 +92,14 @@ export default class Scene extends BaseScene {
     this.$imgs = imgs
     this.$imgs.length &&
       this.$imgs.forEach((img) => {
-        const figureIns = new Figure(this.scene, img)
+        const figureIns = new this.Figure(this.scene, img)
         this.figures.push(figureIns)
       })
   }
+
+  // removeImages() {
+
+  // }
 
   animate() {
     this.updatePos()

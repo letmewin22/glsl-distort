@@ -18,7 +18,7 @@ export default class BaseScene {
     this.setupCamera()
 
     this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
+      antialias: false,
       alpha: true,
     })
 

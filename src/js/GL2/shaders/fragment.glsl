@@ -9,7 +9,6 @@ uniform float uClicked;
 uniform float uTime;
 uniform float uHide;
 
-
 float Sphere(vec2 uv, float r, float blur) {
    float d = length(uv);
    return smoothstep(r, r - blur, d);
@@ -20,6 +19,7 @@ void main() {
    vec2 uv = vUv;
 
    uv.y += 1. * uHide;
+
 
    if(uv.y > 1.) {
       discard;
@@ -49,5 +49,6 @@ void main() {
 
    vec4 finalTexture1 = mixTexture + multiplyTexture + multiplyTexture2 + multiplyTexture3;
 
+   gl_FragColor = finalTexture1;
    gl_FragColor = finalTexture1;
 }

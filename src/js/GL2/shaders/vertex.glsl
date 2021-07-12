@@ -1,13 +1,11 @@
 varying vec2 vUv;
-uniform vec2 uSize;
-uniform vec2 uResolution;
 uniform float uClicked;
 uniform float uHide;
 
 
 void main() {
   vec3 pos = position;
-  vUv = bgCover(uSize, uResolution, uv);
+  vUv = bgCover(size, resolution, uv);
 
   float activator = uClicked;
   float roundblend = sin(PI * activator);
@@ -22,6 +20,8 @@ void main() {
 
   pos.z -= displacement * 590. * roundblend;
   pos.y += uHide;
+
+  // pos.x += 1.;
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 }

@@ -1,4 +1,4 @@
-import BaseFigure from './BaseFigure'
+import BaseFigure from '../dom-gl/BaseFigure'
 import {FigureMouse} from './Figure.mouse'
 
 import fragment from './shaders/fragment.glsl'

@@ -21,10 +21,6 @@ export default class Figure {
 
     this.loader = new THREE.TextureLoader()
     this.createMesh()
-
-    document.querySelector('.range').addEventListener('input', (e) => {
-      this.mesh.material.uniforms.uHide.value = e.target.value
-    })
   }
 
   uploadTextures() {
@@ -49,8 +45,6 @@ export default class Figure {
     this.$img.classList.add('js-hidden')
 
     this.geometry = new THREE.PlaneBufferGeometry(1, 1, 128, 128)
-
-    console.log(this.geometry)
 
     const uniforms = {
       uTexture: {type: 't', value: this.texture},
@@ -77,15 +71,11 @@ export default class Figure {
       uHide: {value: 0},
     }
     this.material = new THREE.ShaderMaterial({
-      extensions: {
-        derivatives: '#extension GL_OES_standard_derivatives : enable',
-      },
       uniforms,
       vertexShader: vertex,
       fragmentShader: fragment,
-      transparent: true,
-      side: THREE.DoubleSide,
     })
+
     this.mesh = new THREE.Mesh(this.geometry, this.material)
 
     this.setSizes()

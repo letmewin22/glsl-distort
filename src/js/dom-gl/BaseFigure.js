@@ -45,14 +45,14 @@ export default class BaseFigure {
     })
 
     const baseUniforms = {
-      uResolution: {
+      resolution: {
         type: 'v2',
         value: new Vec2(
           this.getBoundingTexture.naturalWidth,
           this.getBoundingTexture.naturalHeight,
         ),
       },
-      uSize: {
+      size: {
         type: 'v2',
         value: new Vec2(
           this.getBoundingTexture.width,
@@ -68,9 +68,10 @@ export default class BaseFigure {
     this.material = new Program(this.renderer.gl, {
       vertex,
       fragment,
-      transparent: true,
-      cullFace: null,
       uniforms,
+      transparent: true,
+      depthTest: false,
+      depthWrite: false,
     })
 
     this.setSizes()
@@ -101,7 +102,7 @@ export default class BaseFigure {
 
   get getBoundingTexture() {
     const {width, height, top, left} = this.$img.getBoundingClientRect()
-    const {naturalWidth, naturalHeight} = this.$img
+    const {naturalWidth, naturalHeight} = this.texture.image
     return {width, height, top, left, naturalWidth, naturalHeight}
   }
 
@@ -122,8 +123,8 @@ export default class BaseFigure {
     this.mesh.position.set(this.offset.x, this.offset.y, 0)
     this.mesh.scale.set(this.sizes.x, this.sizes.y, 1)
 
-    this.material.uniforms.uSize.value.x = this.getBoundingTexture.width
-    this.material.uniforms.uSize.value.y = this.getBoundingTexture.height
+    this.material.uniforms.size.value.x = this.getBoundingTexture.width
+    this.material.uniforms.size.value.y = this.getBoundingTexture.height
   }
 
   destroy() {
