@@ -31,7 +31,6 @@ export default class DefaultScetch {
       antialias: true,
       alpha: true,
       premultipliedAlpha: true,
-      webgl: 2,
     })
 
     this._setupCamera()

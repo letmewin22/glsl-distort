@@ -25,15 +25,20 @@ export default class BaseFigure {
     this._id = generateID(12)
     this.$el.setAttribute('data-gl-id', this._id)
 
+    // this.loader = TextureLoader
     this.loader = new TextureLoader({gl: this.gl})
     this.createMesh()
   }
 
-  uploadTexture(src) {
+  async uploadTexture(src) {
+    // return new Promise((resolve) => {
+    //   const texture = this.loader.load(this.gl, {
+    //     src,
+    //     cb: () => resolve(texture),
+    //   })
+    // })
     return new Promise((resolve) => {
-      const texture = this.loader.load(src, () => {
-        resolve(texture)
-      })
+      const texture = this.loader.load(src, () => resolve(texture))
     })
   }
 

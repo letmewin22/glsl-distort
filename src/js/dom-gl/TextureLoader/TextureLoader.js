@@ -9,7 +9,10 @@ class TextureLoader extends Loader {
   }
 
   load(url, onLoad, onProgress, onError) {
-    const texture = new Texture(this.gl)
+    const texture = new Texture(this.gl, {
+      anisotropy: 1,
+      generateMipmaps: false,
+    })
 
     const loader = new ImageLoader(this.manager)
     loader.setCrossOrigin(this.crossOrigin)

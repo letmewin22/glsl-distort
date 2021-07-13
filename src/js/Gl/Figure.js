@@ -25,9 +25,12 @@ export default class Figure {
 
   uploadTextures() {
     const p1 = new Promise((resolve) => {
-      this.texture = this.loader.load(this.$img.getAttribute('src'), () => {
-        resolve()
-      })
+      this.texture = this.loader.load(
+        this.$img.getAttribute('data-src'),
+        () => {
+          resolve()
+        },
+      )
     })
     const p2 = new Promise((resolve) => {
       this.texture2 = this.loader.load(this.$img.dataset.secondImage, () => {
@@ -100,7 +103,7 @@ export default class Figure {
 
   get getBoundingTexture() {
     const {width, height, top, left} = this.$img.getBoundingClientRect()
-    const {naturalWidth, naturalHeight} = this.$img
+    const {naturalWidth, naturalHeight} = this.texture.image
     return {width, height, top, left, naturalWidth, naturalHeight}
   }
   update() {

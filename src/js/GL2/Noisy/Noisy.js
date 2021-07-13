@@ -10,7 +10,7 @@ export default class Noisy extends BaseFigure {
 
   createMaterial() {
     const uniforms = {
-      uAlpha: {value: 0.26},
+      uAlpha: {value: 0.06},
     }
 
     super.createMaterial({uniforms, vertex, fragment})

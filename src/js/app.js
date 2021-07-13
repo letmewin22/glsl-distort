@@ -1,5 +1,6 @@
 import cssWebP from '@/libs/testWebP'
 import Scetch from './dom-gl/Scetch'
+// import Scene from './GL/Scene'
 import Images from './GL2/Images/Images'
 import Noisy from './GL2/Noisy/Noisy'
 import {SmoothScroll} from '@emotionagency/smoothscroll'
@@ -27,5 +28,6 @@ window.addEventListener('load', () => {
     window.scetch = new Scetch('#gl', {
       nodes,
     })
+    // window.scetch = new Scene('#gl', imgs)
   }, 500)
 })
