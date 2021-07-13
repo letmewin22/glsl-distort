@@ -15,14 +15,15 @@ export default class BaseFigure {
   time = 0
   rendering = false
 
-  constructor(scene, renderer, $el) {
+  constructor({scene, renderer, el, cover}) {
     this.scene = scene
     this.renderer = renderer
     this.gl = this.renderer.gl
-    this.$el = $el
+    this.$el = el
+    this.cover = cover
+
     this._id = generateID(12)
     this.$el.setAttribute('data-gl-id', this._id)
-    console.log(this.$el)
 
     this.loader = new TextureLoader({gl: this.gl})
     this.createMesh()
@@ -36,11 +37,11 @@ export default class BaseFigure {
     })
   }
 
-  createMesh(opts = {}) {
-    this.rendering = true
+  disposeTexture(texture) {
+    this.gl.deleteTexture(texture.texture)
+  }
 
-    this.$el.classList.add('js-hidden')
-
+  createMaterial(opts = {}) {
     this.geometry = new Plane(this.renderer.gl, {
       width: 1,
       height: 1,
@@ -48,25 +49,41 @@ export default class BaseFigure {
       heightSegments: 128,
     })
 
-    const baseUniforms = {
-      resolution: {
-        type: 'v2',
-        value: new Vec2(
-          this.getBoundingTexture.naturalWidth,
-          this.getBoundingTexture.naturalHeight,
-        ),
-      },
-      size: {
-        type: 'v2',
-        value: new Vec2(
-          this.getBoundingTexture.width,
-          this.getBoundingTexture.height,
-        ),
-      },
+    const resolution = {
+      type: 'v2',
+      value: new Vec2(
+        this.getBoundingTexture.naturalWidth,
+        this.getBoundingTexture.naturalHeight,
+      ),
     }
 
+    const size = {
+      type: 'v2',
+      value: new Vec2(
+        this.getBoundingTexture.width,
+        this.getBoundingTexture.height,
+      ),
+    }
+
+    const cover = {
+      type: 'v2',
+      value: new Vec2(this.cover.positionX, this.cover.positionY),
+    }
+
+    let baseUniforms = {
+      size,
+      cover,
+      uTime: {value: 0},
+    }
+
+    if (this.cover.state) {
+      baseUniforms = {...baseUniforms, resolution}
+    }
+
+    const finalVertex = this.cover.state ? baseVertex : vertexShader
+
     const uniforms = {...baseUniforms, ...opts?.uniforms}
-    const vertex = baseVertex + '\n' + opts?.vertex
+    const vertex = finalVertex + '\n' + opts?.vertex
     const fragment = baseFragment + '\n' + opts?.fragment
 
     this.material = new Program(this.renderer.gl, {
@@ -77,6 +94,14 @@ export default class BaseFigure {
       depthTest: false,
       depthWrite: false,
     })
+  }
+
+  createMesh() {
+    this.rendering = true
+
+    this.$el.classList.add('js-hidden')
+
+    this.createMaterial()
 
     this.setSizes()
 
@@ -109,7 +134,7 @@ export default class BaseFigure {
     let naturalWidth
     let naturalHeight
 
-    if (this.texture) {
+    if (this.texture && this.cover.state) {
       naturalWidth = this.texture.image.naturalWidth
       naturalHeight = this.texture.image.naturalHeight
     }
@@ -141,10 +166,9 @@ export default class BaseFigure {
   destroy() {
     this.$el.classList.remove('js-hidden')
     this.$el.removeAttribute('data-gl-id')
-
-    this.scene.removeChild(this.mesh)
-
     this.geometry.remove()
     this.material.remove()
+
+    this.scene.removeChild(this.mesh)
   }
 }

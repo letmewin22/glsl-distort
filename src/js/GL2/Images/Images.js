@@ -1,5 +1,5 @@
 import gsap from 'gsap'
-import BaseFigure from '../dom-gl/BaseFigure'
+import BaseFigure from '../../dom-gl/BaseFigure'
 import {FigureMouse} from './Figure.mouse'
 
 import fragment from './shaders/fragment.glsl'
@@ -13,14 +13,10 @@ export default class Figure extends BaseFigure {
     this.mouse.addEvents()
   }
 
-  async createMesh() {
-    this.texture = await this.uploadTexture(this.$el.dataset.src)
-    this.texture2 = await this.uploadTexture(this.$el.dataset.secondImage)
-
+  createMaterial() {
     const uniforms = {
       uTexture: {type: 't', value: this.texture},
       uColorTexture: {type: 't', value: this.texture2},
-      uTime: {value: 0},
       uDistortion: {value: 0},
       uScale: {value: 0},
       uLongScale: {value: 0.1},
@@ -28,13 +24,22 @@ export default class Figure extends BaseFigure {
       uHide: {value: 1},
     }
 
-    super.createMesh({uniforms, vertex, fragment})
+    super.createMaterial({uniforms, vertex, fragment})
+  }
+
+  async createMesh() {
+    this.texture = await this.uploadTexture(this.$el.dataset.src)
+    this.texture2 = await this.uploadTexture(this.$el.dataset.secondImage)
+
+    super.createMesh()
 
     gsap.to(this.material.uniforms.uHide, {duration: 1, value: 0})
   }
 
   destroy() {
     this.mouse.removeEvents()
+    this.disposeTexture(this.texture)
+    this.disposeTexture(this.texture2)
     super.destroy()
   }
 }

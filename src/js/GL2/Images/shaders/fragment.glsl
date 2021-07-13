@@ -49,6 +49,6 @@ void main() {
 
    vec4 finalTexture1 = mixTexture + multiplyTexture + multiplyTexture2 + multiplyTexture3;
 
-   gl_FragColor = finalTexture1;
-   gl_FragColor = finalTexture1;
+   // gl_FragColor = finalTexture1;
+   gl_FragColor = bwTexture;
 }

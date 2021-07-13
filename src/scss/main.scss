@@ -13,7 +13,7 @@ body {
   color: #131116;
   overflow: hidden;
   height: 100vh;
-  background-color: #d7d8dd;
+  background-color: #fdfaf3;
   font-family: Helvetica;
 }
 
@@ -107,12 +107,14 @@ body {
   }
 }
 
-#gl {
+#gl,
+#gl-2 {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
   pointer-events: none;
+  z-index: -1;
 }
 
 .text {
@@ -139,5 +141,11 @@ body {
   height: vw(684);
   top: vw(500);
   left: vw(85);
+  pointer-events: none;
+}
+
+.noisy {
+  // background-color: gray;
+  @include coverdiv(fixed);
   pointer-events: none;
 }

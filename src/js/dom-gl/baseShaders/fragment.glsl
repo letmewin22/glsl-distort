@@ -3,3 +3,7 @@
 #define PI 3.14159265359
 
 precision highp float;
+
+vec3 fromRGB(vec3 rgb) {
+  return rgb / 255.;
+}

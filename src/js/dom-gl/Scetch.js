@@ -1,57 +1,51 @@
 import {Camera} from 'ogl'
-import {resize, raf} from '@emotionagency/utils'
-import emitter from 'tiny-emitter/instance'
-import gsap from 'gsap'
-
 import DefaultScetch from './DefaultScetch'
 
-export {emitter}
+const cover = {
+  state: true,
+  positionX: 0.5,
+  positionY: 0.5,
+}
+
+// const opts = {
+//   nodes: [
+//     {
+//       $el: '',
+//       Figure: '',
+//       cover: '',
+//     },
+//     {
+//       $el: '',
+//       Figure: '',
+//       cover: '',
+//     },
+//   ],
+// }
 
 export default class Scetch extends DefaultScetch {
   figures = []
   $els = []
 
-  constructor($selector, $els = [], opts = {}) {
-    super($selector)
-    this.$els = [...$els]
-    this.raf = opts.raf ?? raf
-    this.Figure = opts.Figure ?? console.warn('Figure is not defined')
+  constructor($selector, opts = {}) {
+    super($selector, opts.raf)
 
-    this.bounds()
-    this.init()
-    this.raf.on(this.animate)
-    resize.on(this.resize)
+    this._init()
+    this.addFigures(opts.nodes)
   }
 
-  bounds() {
-    const m = ['animate', 'resize']
-    m.forEach((fn) => {
-      this[fn] = this[fn].bind(this)
-    })
+  _init() {
+    super._init()
   }
 
-  init() {
-    super.init()
-
-    this.$els.forEach((img) => {
-      const figureIns = new this.Figure(this.scene, this.renderer, img)
-      this.figures.push(figureIns)
-    })
-
-    emitter.on('animateImages', () => {
-      this.animateImages()
-    })
-  }
-
-  setupCamera() {
-    super.setupCamera()
+  _setupCamera() {
+    super._setupCamera()
 
     this.perspective = 800
-    this.formula = 2 * Math.atan(this.sizes.h / 2 / this.perspective)
-    this.fov = (180 * this.formula) / Math.PI
+    const formula = 2 * Math.atan(this.sizes.h / 2 / this.perspective)
+    const fov = (180 * formula) / Math.PI
 
     this.camera = new Camera(this.renderer.gl, {
-      fov: this.fov,
+      fov,
       aspect: this.sizes.w / this.sizes.h,
       near: 0.01,
       far: 10000,
@@ -61,7 +55,7 @@ export default class Scetch extends DefaultScetch {
     this.camera.lookAt([0, 0, 0])
   }
 
-  updatePos() {
+  _updatePos() {
     this.figures.forEach((figure) => {
       figure.setSizes()
       figure.resize()
@@ -69,31 +63,18 @@ export default class Scetch extends DefaultScetch {
     })
   }
 
-  resize() {
-    super.resize()
-  }
-
-  animateImages() {
-    const blocks = document.querySelectorAll('.img-wrapper')
-    this.$els.forEach(($el, i) => {
-      if (!$el.classList.contains('js-cloned')) {
-        gsap.to(this.figures[i].material.uniforms.uHide, {
-          duration: 1.2,
-          value: 1,
-          ease: 'power2.out',
-          onComplete: () => this.removeFigure($el.dataset.glId),
-        })
-        gsap.to(blocks, {duration: 1.2, opacity: 0, ease: 'power2.out'})
-      }
-    })
-  }
-
-  addFigures($els = []) {
+  addFigures(nodes = []) {
+    const $els = nodes.map((node) => node.$el)
     this.$els = [...this.$els, ...$els]
 
     $els.length &&
-      $els.forEach((img) => {
-        const figureIns = new this.Figure(this.scene, this.renderer, img)
+      $els.forEach((el, i) => {
+        const figureIns = new nodes[i].Figure({
+          el,
+          scene: this.scene,
+          renderer: this.renderer,
+          cover: nodes[i].cover ?? cover,
+        })
         this.figures.push(figureIns)
       })
   }
@@ -105,17 +86,17 @@ export default class Scetch extends DefaultScetch {
     this.figures = this.figures.filter((f) => f._id !== id)
   }
 
-  animate() {
-    this.updatePos()
-    super.animate()
+  _animate() {
+    this._updatePos()
+    super._animate()
   }
 
   destroy() {
     this.figures.forEach((figure) => {
-      figure.destroy()
+      this.removeFigure(figure._id)
     })
-
-    this.raf.off(this.animate)
-    resize.off(this.resize)
+    setTimeout(() => {
+      super.destroy()
+    }, 100)
   }
 }

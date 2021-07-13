@@ -9,9 +9,7 @@ class TextureLoader extends Loader {
   }
 
   load(url, onLoad, onProgress, onError) {
-    const texture = new Texture(this.gl, {
-      anisotropy: 1,
-    })
+    const texture = new Texture(this.gl)
 
     const loader = new ImageLoader(this.manager)
     loader.setCrossOrigin(this.crossOrigin)
@@ -19,7 +17,7 @@ class TextureLoader extends Loader {
 
     loader.load(
       url,
-      function(image) {
+      (image) => {
         texture.image = image
 
         if (onLoad !== undefined) {

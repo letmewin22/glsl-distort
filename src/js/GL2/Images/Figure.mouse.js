@@ -1,7 +1,7 @@
 import gsap from 'gsap'
 
 import emitter from 'tiny-emitter/instance'
-import {cloneNode} from '../utils/cloneNode'
+import {cloneNode} from '../../utils/cloneNode'
 
 export const ease = 'power2.out'
 
@@ -127,12 +127,6 @@ export class FigureMouse {
       duration: 2,
       value: 0.1,
       delay: 0,
-      overwrite: true,
-      ease: 'power4.out',
-    })
-    gsap.to(document.body, {
-      duration: 1.8,
-      background: '#d7d8dd',
       overwrite: true,
       ease: 'power4.out',
     })

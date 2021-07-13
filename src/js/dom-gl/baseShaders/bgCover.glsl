@@ -1,6 +1,8 @@
+uniform vec2 cover;
+
 vec2 bgCover(vec2 planeSize, vec2 imageSize, vec2 uv) {
 
-  uv -=0.5;
+  uv -= cover;
 
   float aspect = planeSize.x / planeSize.y;
   float imageAspect = imageSize.x / imageSize.y;
@@ -11,6 +13,6 @@ vec2 bgCover(vec2 planeSize, vec2 imageSize, vec2 uv) {
     uv.y *= imageAspect / aspect;
   }
 
-  uv += 0.5;
+  uv += cover;
   return uv;
 }
