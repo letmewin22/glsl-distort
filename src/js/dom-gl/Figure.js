@@ -9,7 +9,7 @@ import vertexShader from './baseShaders/vertex.glsl'
 
 const baseVertex = bgCover + '\n' + vertexShader
 
-export default class BaseFigure {
+export default class Figure {
   sizes = new Vec2(0, 0)
   offset = new Vec2(0, 0)
   time = 0

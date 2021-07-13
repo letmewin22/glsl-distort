@@ -2,11 +2,14 @@ import cssWebP from '@/libs/testWebP'
 import Scetch from './dom-gl/Scetch'
 // import Scene from './GL/Scene'
 import Images from './GL2/Images/Images'
+// import Text from './dom-gl/Text'
 import Noisy from './GL2/Noisy/Noisy'
 import {SmoothScroll} from '@emotionagency/smoothscroll'
+// import './text'
 
 cssWebP()
 const imgs = [...document.querySelectorAll('.js-gl-img')]
+// const text = document.querySelector('.img-text')
 const noisy = document.querySelector('.noisy')
 
 let nodes = imgs.map((img) => ({
@@ -20,6 +23,10 @@ nodes = [
     $el: noisy,
     Figure: Noisy,
   },
+  // {
+  //   $el: text,
+  //   Figure: Text,
+  // },
 ]
 
 window.addEventListener('load', () => {

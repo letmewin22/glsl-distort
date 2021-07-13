@@ -1,11 +1,11 @@
 import gsap from 'gsap'
-import BaseFigure from '../../dom-gl/BaseFigure'
+import Figure from '../../dom-gl/Figure'
 import {FigureMouse} from './Figure.mouse'
 
 import fragment from './shaders/fragment.glsl'
 import vertex from './shaders/vertex.glsl'
 
-export default class Figure extends BaseFigure {
+export default class Images extends Figure {
   constructor(scene, renderer, $el) {
     super(scene, renderer, $el)
 

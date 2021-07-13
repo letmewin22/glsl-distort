@@ -1,9 +1,9 @@
-import BaseFigure from '../../dom-gl/BaseFigure'
+import Figure from '../../dom-gl/Figure'
 
 import fragment from './shaders/fragment.glsl'
 import vertex from './shaders/vertex.glsl'
 
-export default class Noisy extends BaseFigure {
+export default class Noisy extends Figure {
   constructor(scene, renderer, $el) {
     super(scene, renderer, $el)
   }
