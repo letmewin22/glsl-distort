@@ -1,10 +1,6 @@
 import {Program, Mesh, Vec2, Text, Geometry} from 'ogl'
 import {TextureLoader} from './TextureLoader/TextureLoader'
-
 import {generateID} from './utils/generateID'
-
-import baseFragment from './baseShaders/fragment.glsl'
-import baseVertex from './baseShaders/vertex.glsl'
 
 import defaultFragment from './defaultShaders/fragment.glsl'
 import defaultVertex from './defaultShaders/vertex.glsl'
@@ -36,34 +32,7 @@ export default class TextFigure {
   }
 
   async createMaterial(opts = {}) {
-    this.texture = await this.uploadTexture('/assets/fonts/FiraSans-Bold.png')
-
-    const font = await (await fetch('/assets/fonts/FiraSans-Bold.json')).json()
-
-    this.text = new Text({
-      font,
-      text: "don't panic",
-      width: 4,
-      align: 'center',
-      letterSpacing: -0.05,
-      size: 1,
-      lineHeight: 1.1,
-    })
-
-    // console.log(text)
-    // console.log(font)
-    // this.text = new Text(this.renderer.gl, {
-    //   font: font,
-    //   text: 'Test',
-    // })
-
-    this.geometry = new Geometry(this.gl, {
-      position: {size: 3, data: this.text.buffers.position},
-      uv: {size: 2, data: this.text.buffers.uv},
-      // id provides a per-character index, for effects that may require it
-      id: {size: 1, data: this.text.buffers.id},
-      index: {data: this.text.buffers.index},
-    })
+    this.texture = await this.uploadTexture('/assets/fonts/font.png')
 
     const baseUniforms = {
       uTime: {value: 0},
@@ -71,8 +40,8 @@ export default class TextFigure {
     }
 
     const uniforms = baseUniforms
-    const vertex = baseVertex + '\n' + defaultVertex
-    const fragment = baseFragment + '\n' + defaultFragment
+    const vertex = defaultVertex
+    const fragment = defaultFragment
 
     this.material = new Program(this.renderer.gl, {
       vertex,
@@ -81,13 +50,26 @@ export default class TextFigure {
       transparent: true,
       cullFace: null,
     })
-  }
-  createMesh() {
-    this.rendering = true
 
+    const font = await (await fetch('/assets/fonts/font.json')).json()
+
+    this.text = new Text({
+      font,
+      ...this.textSyles,
+    })
+
+    this.geometry = new Geometry(this.gl, {
+      position: {size: 3, data: this.text.buffers.position},
+      uv: {size: 2, data: this.text.buffers.uv},
+      // id provides a per-character index, for effects that may require it
+      id: {size: 1, data: this.text.buffers.id},
+      index: {data: this.text.buffers.index},
+    })
+  }
+  async createMesh() {
     this.$el.classList.add('js-hidden')
 
-    this.createMaterial()
+    await this.createMaterial()
 
     this.setSizes()
 
@@ -96,12 +78,21 @@ export default class TextFigure {
       program: this.material,
     })
 
-    // console.log(this.text)
-    // this.mesh.position.set(this.offset.x, this.offset.y, 0)
-    // this.mesh.scale.set(this.sizes.x, this.sizes.y, this.sizes.x / 2)
-    // this.mesh.position.y = this.text.height * 0.5
+    this.mesh.position.set(this.offset.x, this.offset.y, 0)
+    this.mesh.scale.set(0.8, 0.8, 0.8)
+
     this.mesh.setParent(this.scene)
-    console.log(this.mesh)
+
+    this.rendering = true
+  }
+
+  update() {
+    if (!this.rendering) {
+      return
+    }
+    this.time++
+    const m = this.material.uniforms
+    m.uTime.value = this.time
   }
 
   setSizes() {
@@ -119,28 +110,79 @@ export default class TextFigure {
 
   get getBoundingTexture() {
     const {width, height, top, left} = this.$el.getBoundingClientRect()
+
     return {width, height, top, left}
   }
 
-  update() {
-    if (!this.rendering) {
-      return
+  get textSyles() {
+    const styles = window.getComputedStyle(this.$el)
+    const text = this.$el.innerText
+
+    let textAlign
+
+    switch (styles.textAlign) {
+      case 'start':
+        textAlign = 'right'
+        break
+      case 'center':
+        textAlign = 'center'
+        break
+      case 'end':
+        textAlign = 'left'
+        break
+      default:
+        textAlign = 'right'
+        break
     }
-    this.time++
-    // const m = this.material.uniforms
-    // m.uTime.value = this.time
+
+    let letterSpacing
+
+    switch (styles.letterSpacing) {
+      case 'normal':
+        letterSpacing = 0
+        break
+      default:
+        letterSpacing = parseInt(styles.letterSpacing)
+        break
+    }
+
+    const textStyles = {
+      text,
+      align: textAlign,
+      letterSpacing: letterSpacing,
+      size: parseInt(styles.fontSize),
+      lineHeight: parseInt(styles.lineHeight),
+    }
+
+    return textStyles
   }
 
   resize() {
     if (!this.rendering) {
       return
     }
+
     this.setSizes()
     this.mesh.position.set(this.offset.x, this.offset.y, 0)
-    this.mesh.scale.set(this.sizes.x, this.sizes.y, 1)
 
-    // this.material.uniforms.size.value.x = this.getBoundingTexture.width
-    // this.material.uniforms.size.value.y = this.getBoundingTexture.height
+    this.text.width = this.sizes.x
+    this.text.height = this.sizes.y
+
+    this.text.text = this.textSyles.text
+    this.text.align = this.textSyles.align
+    this.text.letterSpacing = this.textSyles.letterSpacing
+    this.text.size = this.textSyles.size
+    this.text.lineHeight = this.textSyles.lineHeight
+
+    this.mesh.geometry.attributes.position.data = this.text.buffers.position
+    this.mesh.geometry.attributes.uv.data = this.text.buffers.uv
+    this.mesh.geometry.attributes.id.data = this.text.buffers.id
+    this.mesh.geometry.attributes.index.data = this.text.buffers.index
+
+    this.mesh.geometry.attributes.position.needsUpdate = true
+    this.mesh.geometry.attributes.uv.needsUpdate = true
+    this.mesh.geometry.attributes.id.needsUpdate = true
+    this.mesh.geometry.attributes.index.needsUpdate = true
   }
 
   destroy() {

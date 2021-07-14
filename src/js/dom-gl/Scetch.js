@@ -8,6 +8,11 @@ const cover = {
 }
 
 // const opts = {
+// raf: '',
+// camera: {
+// near: ''
+// far: ''
+// }
 //   nodes: [
 //     {
 //       $el: '',
@@ -28,7 +33,7 @@ export default class Scetch extends DefaultScetch {
 
   constructor($selector, opts = {}) {
     super($selector, opts.raf)
-
+    this.opts = opts
     this._init()
     this.addFigures(opts.nodes)
   }
@@ -47,8 +52,8 @@ export default class Scetch extends DefaultScetch {
     this.camera = new Camera(this.renderer.gl, {
       fov,
       aspect: this.sizes.w / this.sizes.h,
-      near: 0.01,
-      far: 10000,
+      near: this.opts.camera?.near ?? 0.01,
+      far: this.opts.camera?.far ?? 10000,
     })
 
     this.camera.position.set(0, 0, this.perspective)
