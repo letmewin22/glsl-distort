@@ -32,8 +32,7 @@ export default class Scetch extends DefaultScetch {
   $els = []
 
   constructor($selector, opts = {}) {
-    super($selector, opts.raf)
-    this.opts = opts
+    super($selector, opts)
     this._init()
     this.addFigures(opts.nodes)
   }

@@ -1,5 +1,5 @@
 import gsap from 'gsap'
-import Figure from '../../dom-gl/Figure'
+import {Figure} from '../../dom-gl'
 import {FigureMouse} from './Figure.mouse'
 
 import fragment from './shaders/fragment.glsl'

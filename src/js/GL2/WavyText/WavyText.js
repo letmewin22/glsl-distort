@@ -1,9 +1,9 @@
-import {Figure} from '../../dom-gl'
+import Text from '../../dom-gl/Text'
 
 import fragment from './shaders/fragment.glsl'
 import vertex from './shaders/vertex.glsl'
 
-export default class Noisy extends Figure {
+export default class WavyText extends Text {
   constructor(scene, renderer, $el) {
     super(scene, renderer, $el)
   }

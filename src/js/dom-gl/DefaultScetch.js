@@ -2,9 +2,10 @@ import {Renderer, Transform} from 'ogl'
 import {resize, raf} from '@emotionagency/utils'
 
 export default class DefaultScetch {
-  constructor($selector, customRaf) {
+  constructor($selector, opts) {
     this.$container = document.querySelector($selector)
-    this.raf = customRaf ?? raf
+    this.raf = opts.raf ?? raf
+    this.opts = opts
 
     this.sizes = {
       w: window.innerWidth,
@@ -27,10 +28,16 @@ export default class DefaultScetch {
     this.scene = new Transform()
 
     this.renderer = new Renderer({
-      dpr: 2,
-      antialias: true,
-      alpha: true,
-      premultipliedAlpha: true,
+      dpr: this.opts.dpr ?? 2,
+      antialias: true ?? this.opts.antialias ?? true,
+      alpha: this.opts.alpha ?? true,
+      premultipliedAlpha: this.opts.premultipliedAlpha ?? true,
+      depth: this.opts.depth ?? true,
+      stencil: this.opts.stencil ?? false,
+      preserveDrawingBuffer: this.opts.preserveDrawingBuffer ?? false,
+      powerPreference: this.opts.preserveDrawingBuffer ?? 'default',
+      autoClear: this.opts.autoClear ?? true,
+      webgl: this.opts.webgl ?? 2,
     })
 
     this._setupCamera()
