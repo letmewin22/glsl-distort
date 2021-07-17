@@ -1,9 +1,10 @@
+/* eslint-disable max-len */
 import cssWebP from '@/libs/testWebP'
-import Scetch from './dom-gl/Scetch'
-
-import Images from './GL2/Images/Images'
+import {Scetch} from '@emotionagency/glhtml'
+import Images from './GL9/Images/Images'
 import Noisy from './GL2/Noisy/Noisy'
 import {SmoothScroll} from '@emotionagency/smoothscroll'
+import {raf} from '@emotionagency/utils'
 
 cssWebP()
 const imgs = [...document.querySelectorAll('.js-gl-img')]
@@ -24,9 +25,10 @@ nodes = [
 
 window.addEventListener('load', () => {
   setTimeout(() => {
-    new SmoothScroll()
+    window.ss = new SmoothScroll()
     window.scetch = new Scetch('#gl', {
       nodes,
+      raf,
     })
     // window.scetch = new Scene('#gl', imgs)
   }, 500)

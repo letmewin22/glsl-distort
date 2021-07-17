@@ -1,7 +1,7 @@
 const webpackReal = require('webpack')
 const path = require('path')
 // const BundleAnalyzerPlugin =
-// require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+//   require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 function createConfig(env) {
   const isProduction = env === 'production'
@@ -75,12 +75,11 @@ function createConfig(env) {
       }),
     )
     // webpackConfig.plugins.push(
-
     //   new BundleAnalyzerPlugin({
     //     analyzerMode: 'server',
     //     analyzerPort: 5500,
-    //     openAnalyzer: false
-    //   })
+    //     openAnalyzer: true,
+    //   }),
     // )
   }
 

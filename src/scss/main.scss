@@ -32,6 +32,7 @@ body {
   grid-column-gap: vw(176);
   margin-top: 100px;
   margin-bottom: 100px;
+  padding-top: 1500px;
 }
 
 .js-hidden {
@@ -139,10 +140,10 @@ body {
 
 .to {
   position: absolute;
-  width: vw(1126);
-  height: vw(684);
+  width: 100vw;
+  height: 100vh;
   top: vw(500);
-  left: vw(85);
+  left: 0;
   pointer-events: none;
 }
 

@@ -1,4 +1,3 @@
-import gsap from 'gsap'
 import {Figure} from '@emotionagency/glhtml'
 import {FigureMouse} from './Figure.mouse'
 
@@ -18,10 +17,6 @@ export default class Images extends Figure {
       uTexture: {type: 't', value: this.texture},
       uColorTexture: {type: 't', value: this.texture2},
       uDistortion: {value: 0},
-      uScale: {value: 0},
-      uLongScale: {value: 0.1},
-      uClicked: {value: 0},
-      uHide: {value: 1},
     }
 
     super.createMaterial({uniforms, vertex, fragment})
@@ -32,14 +27,10 @@ export default class Images extends Figure {
     this.texture2 = await this.uploadTexture(this.$el.dataset.secondImage)
 
     super.createMesh()
-
-    gsap.to(this.material.uniforms.uHide, {duration: 1, value: 0})
   }
 
   destroy() {
-    this.mouse.removeEvents()
     this.disposeTexture(this.texture)
-    this.disposeTexture(this.texture2)
     super.destroy()
   }
 }

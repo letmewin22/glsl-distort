@@ -15,7 +15,7 @@ export default class Images extends Figure {
 
   createMaterial() {
     const uniforms = {
-      uTexture: {type: 't', value: this.texture},
+      uTexture: {type: 't', value: this.texture2},
       uColorTexture: {type: 't', value: this.texture2},
       uDistortion: {value: 0},
       uScale: {value: 0},

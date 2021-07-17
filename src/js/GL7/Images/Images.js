@@ -16,7 +16,6 @@ export default class Images extends Figure {
   createMaterial() {
     const uniforms = {
       uTexture: {type: 't', value: this.texture},
-      uColorTexture: {type: 't', value: this.texture2},
       uDistortion: {value: 0},
       uScale: {value: 0},
       uLongScale: {value: 0.1},
@@ -28,8 +27,7 @@ export default class Images extends Figure {
   }
 
   async createMesh() {
-    this.texture = await this.uploadTexture(this.$el.dataset.src)
-    this.texture2 = await this.uploadTexture(this.$el.dataset.secondImage)
+    this.texture = await this.uploadTexture(this.$el.dataset.secondImage)
 
     super.createMesh()
 
