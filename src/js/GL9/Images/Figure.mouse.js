@@ -40,13 +40,21 @@ export class FigureMouse {
     const tl = gsap.timeline()
     const duration = 1.6
 
+    const otherImages = document.querySelectorAll('.js-gl-img:not(.js-cloned)')
+
+    otherImages.forEach((el) => {
+      if (this.instance._id !== el.dataset.glId) {
+        window.scetch.removeFigure(el.dataset.glId)
+      }
+    })
+
     tl.to(this.instance.$el, {
       duration,
       width,
       height,
       top,
       left,
-      ease,
+      ease: 'power3.inOut',
       onComplete: () => {
         to.appendChild(this.instance.$el)
         this.instance.$el.style.position = 'static'
@@ -68,7 +76,7 @@ export class FigureMouse {
       {
         duration,
         value: 1,
-        ease,
+        ease: 'power3.inOut',
       },
       0,
     )

@@ -1,4 +1,5 @@
 varying vec2 vUv;
+varying float vParallax;
 
 uniform sampler2D uTexture;
 uniform float uDistortion;
@@ -17,13 +18,13 @@ vec4 transition(float ratio, in vec2 st) {
     float ll = smoothstep(l-0.04, l+0.04, ratio);
     
     float w = .2;
-    vec2 p1 = p*(1.+smoothstep(l-w, l+w, ratio));
+    vec2 p1 = p*(1.+smoothstep(l-w*1.2, l+w, ratio));
     vec2 p2 = p*smoothstep(l-w, l+w, ratio);
     
     vec2 uv1 = p1*0.5+0.5;
     vec2 uv2 = p2*0.5+0.5;
 
-    vec2 dir = uv2 - vec2(0.5);
+    vec2 dir = uv2 - vec2(0.5, 0.5);
     float dist = distance(uv2, vec2(0.5));
     vec2 offset = dir * (sin(dist * 20.0 - uTime * 0.2) + 0.5) * 0.035 * uDistortion * (1. - uClicked);
     uv2 = uv2 + offset;
@@ -36,10 +37,23 @@ vec4 transition(float ratio, in vec2 st) {
 }
 
 void main() {
+
+    vec2 uv = vUv;
+
+    uv.y += vParallax;
+
+   if(uv.y > 1.) {
+      discard;
+   }
+
+    if(uv.y < 0.) {
+      discard;
+   }
+
     float ratio = uDistortion;
 
     float angle = 1.55;
-	vec2 newUv = vUv;
+	vec2 newUv = uv;
 
 	newUv+= (sin(newUv.y*10. + (uTime / 5.)) / 500.) * (uStrength* 2.);
 	newUv+= (sin(newUv.x*10. + (uTime / 15.)) / 500.) * (uStrength * 2.);
@@ -50,9 +64,9 @@ void main() {
     float roundblend2 = sin(PI * uScale);
     float roundblend3 = sin(PI * uClicked);
 
-    vec4 cr =  transition(ratio, newUv + offset * 0.5);
+    vec4 cr =  transition(ratio, newUv + offset * 0.4);
 	vec4 cga =  transition(ratio, newUv);
-	vec4 cb =  transition(ratio, newUv - offset * 0.5);
+	vec4 cb =  transition(ratio, newUv - offset * 0.4);
 
     vec4 img = vec4(cr.r, cga.g, cb.b, cga.a);
 

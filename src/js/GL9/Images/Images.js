@@ -25,6 +25,8 @@ export default class Images extends Figure {
       uHide: {value: 1},
       uStrength: {value: 0},
       uViewportY: {value: window.innerHeight},
+      uScrollPos: {value: 0},
+      uScrollHeight: {value: 0},
     }
 
     super.createMaterial({uniforms, vertex, fragment})
@@ -34,6 +36,10 @@ export default class Images extends Figure {
     this.texture = await this.uploadTexture(this.$el.dataset.secondImage)
 
     super.createMesh()
+  }
+
+  get scrollHeight() {
+    return window.ss?.max + window.innerHeight
   }
 
   get scrollPos() {
@@ -49,6 +55,14 @@ export default class Images extends Figure {
     return window.ss?.state?.scrolling ?? false
   }
 
+  resize() {
+    super.resize()
+
+    if (this.material) {
+      this.material.uniforms.uViewportY.value = window.innerHeight
+    }
+  }
+
   update() {
     super.update()
 
@@ -56,13 +70,14 @@ export default class Images extends Figure {
       let strength = this.velocity / 250
       strength = lerp(this.material.uniforms.uStrength.value, strength, 0.08)
       this.material.uniforms.uStrength.value = strength
+      this.material.uniforms.uScrollPos.value = this.scrollPos
+      this.material.uniforms.uScrollHeight.value = this.scrollHeight
     }
   }
 
   destroy() {
     this.mouse.removeEvents()
     this.disposeTexture(this.texture)
-    this.disposeTexture(this.texture2)
     super.destroy()
   }
 }

@@ -67,7 +67,6 @@ export default class Images extends Figure {
   destroy() {
     this.mouse.removeEvents()
     this.disposeTexture(this.texture)
-    this.disposeTexture(this.texture2)
     super.destroy()
   }
 }

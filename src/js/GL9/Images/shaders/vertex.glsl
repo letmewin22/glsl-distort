@@ -1,27 +1,17 @@
 varying vec2 vUv;
+varying float vParallax;
 
 uniform float uStrength;
-uniform float uTime;
 uniform float uClicked;
 uniform float uViewportY;
+uniform float uScrollPos;
+uniform float uScrollHeight;
 
-// float distort(float value, vec3 pos, float time) {
-//   float roundblend = sin(PI*value);
-// 	float stepblend = clamp(pos.y * value, 0.,1.);
 
-//   float timeSpeed = uTime / time;
-//   float displacement = sin(pos.y * value + timeSpeed);
-
-//   return 40. * stepblend +  roundblend * 20. * displacement;
-// }
 
 void main() {
   vec3 pos = position;
   vUv = bgCover(size, resolution, uv);
-
-  vUv -= 0.5;
-  vUv *= 0.95;
-  vUv += 0.5;
 
   float activator = uClicked;
   float roundblend = sin(PI * activator);
@@ -34,12 +24,23 @@ void main() {
   float dist = length(newUv);
   float displacement = smoothstep(roundblend * 6., activator + (activator * 24.), dist);
 
-  pos.z -= displacement * 590. * roundblend;
+  pos.z -= displacement * 700. * roundblend;
 
+  vParallax = uScrollPos / uScrollHeight * 0.2 * uClicked;
+  
+  pos.y += vParallax;
 
   vec4 newPosition = modelViewMatrix * vec4(pos, 1.0);
 
-  newPosition.z += sin(newPosition.y / uViewportY * 2. * PI + PI / 2.0) * -uStrength*20.;
+  float scrollValue = -uStrength *20. * (1. - uClicked);
+
+  newPosition.z += sin(newPosition.y / uViewportY * 2. * PI + PI / 2.0) * scrollValue;
+
+  // float startPos = (newPosition.y - 1.);
+  // float roundblend = sin(2.*PI*uClicked);
+
+  // newPosition.z += sin(startPos / 1920. * PI * 3. + (uTime / 10.)) * roundblend * 150.;
+
 
   gl_Position = projectionMatrix * newPosition;
 }
