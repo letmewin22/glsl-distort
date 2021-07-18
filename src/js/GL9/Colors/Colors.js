@@ -1,5 +1,6 @@
 import {Figure, OGL} from '@emotionagency/glhtml'
 import gsap from 'gsap'
+import emitter from 'tiny-emitter/instance'
 
 import fragment from './shaders/fragment.glsl'
 import vertex from './shaders/vertex.glsl'
@@ -8,9 +9,13 @@ export default class Colors extends Figure {
   constructor(scene, renderer, $el) {
     super(scene, renderer, $el)
 
-    this.onClick = this.onClick.bind(this)
+    this.onDark = this.onDark.bind(this)
+    this.onLight = this.onLight.bind(this)
+    const dark = document.querySelector('#dark')
+    const light = document.querySelector('#light')
 
-    document.body.addEventListener('click', this.onClick)
+    dark.addEventListener('click', this.onDark)
+    light.addEventListener('click', this.onLight)
   }
 
   createMaterial() {
@@ -27,18 +32,24 @@ export default class Colors extends Figure {
     super.createMesh()
   }
 
-  onClick() {
-    let to = 1
-    if (this.material.uniforms.uClicked.value === 0) {
-      to = 1
-    } else {
-      to = 0
-    }
+  onDark() {
     gsap.to(this.material.uniforms.uClicked, {
       duration: 1,
-      value: to,
+      value: 1,
       overwrite: true,
     })
+    document.body.setAttribute('data-dark', 'true')
+    emitter.emit('changeTheme', 1)
+  }
+
+  onLight() {
+    gsap.to(this.material.uniforms.uClicked, {
+      duration: 1,
+      value: 0,
+      overwrite: true,
+    })
+    document.body.removeAttribute('data-dark')
+    emitter.emit('changeTheme', 0)
   }
 
   destroy() {

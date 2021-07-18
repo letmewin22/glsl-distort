@@ -54,7 +54,7 @@ export class FigureMouse {
       height,
       top,
       left,
-      ease: 'power2.inOut',
+      ease: 'back.out(1.1)',
       onComplete: () => {
         to.appendChild(this.instance.$el)
         this.instance.$el.style.position = 'static'
@@ -77,6 +77,7 @@ export class FigureMouse {
         duration,
         value: 1,
         ease: 'power2.inOut',
+        delay: 0.2,
       },
       0,
     )

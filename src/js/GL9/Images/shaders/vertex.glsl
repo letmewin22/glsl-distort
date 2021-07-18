@@ -4,30 +4,19 @@ varying float vParallax;
 
 uniform float uStrength;
 uniform float uClicked;
-uniform float uDistortion;
 uniform float uViewportY;
 uniform float uScrollPos;
 uniform float uScrollHeight;
-uniform float uTime;
+uniform float uDistortion;
 
 
-float distort(float action, vec3 pos) {
-  float roundblend = sin(PI * action);
+float transition(float ratio, in vec2 st) {
+    vec2 p = st * 2. -1.;
 
-  float wavesCount = 4.;
-  float scale = 60.;
+    float l = pow(length(p),0.5)/sqrt(2.0);
+    float ll = smoothstep(l-0.04, l+0.04, ratio);
 
-  float waveCoords = ((action / 45.0) * 3.5) - 1.75;
-
-  float distanceToWave = distance(vec2(pos.x - 1., 0.0), vec2(waveCoords, 0.0));
-
-
-
-  float displacement = sin(PI * sin(wavesCount * distanceToWave + uTime / 10.));
-
-  
-
-  return scale * roundblend * displacement;
+    return ll;
 }
 
 
@@ -36,30 +25,14 @@ void main() {
   vUv = bgCover(size, resolution, uv);
   vDUv = uv;
 
-  // float activator = uClicked;
-  // float roundblend = sin(PI * activator);
+  float scale = 800.;
+  float d = uClicked;
 
-  // pos.x = (pos.x) * 10.;
-  // pos.y = pos.x - 1.;
-
-  // float dist = length(pos);
-  // float displacement = smoothstep(roundblend, activator + (activator * 24.), dist);
-
-  // pos.z -= displacement * 500. * roundblend;
-
-  pos.z += distort(uDistortion, pos);
-
-      // float waveCoords = ((uClicked / 45.0) * 3.5) - 1.75;
-
-      // float distanceToWave = distance(vec2(pos.x, 0.0), vec2(waveCoords, 0.0));
-
-      // pos.z -= (cos(clamp(distanceToWave, 0.0, 0.75) * PI) - cos(0.75 * PI) + (2.0 * sin(PI * uClicked))) * 20.25;
-
+  pos.z += d * (transition(d, uv) * scale - scale * d);
 
   vParallax = uScrollPos / uScrollHeight * 0.2 * uClicked;
 
   pos.y += vParallax;
-
 
   vec4 newPosition = modelViewMatrix * vec4(pos, 1.0);
 
@@ -67,10 +40,6 @@ void main() {
 
   newPosition.z += sin(newPosition.y / uViewportY * 2. * PI + PI / 2.0) * scrollValue;
 
-  // float startPos = (newPosition.y - 1.);
-  // float roundblend = sin(2.*PI*uClicked);
-
-  // newPosition.z += sin(startPos / 1920. * PI * 3. + (uTime / 10.)) * roundblend * 150.;
 
   gl_Position = projectionMatrix * newPosition;
 }

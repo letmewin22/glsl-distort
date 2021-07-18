@@ -5,14 +5,23 @@
   }
 }
 
+:root {
+  --fg: #462324;
+}
+
+[data-dark] {
+  --fg: #fff;
+}
+
 body {
   @include reg;
   // color: white;
   line-height: 1.5em;
   font-size: size(20, 16);
-  color: #131116;
+  color: var(--fg);
   overflow: hidden;
   height: 100vh;
+  transition: color 0.3s ease;
   // background-color: 20%;
   font-family: Helvetica;
 }
@@ -162,4 +171,12 @@ body {
   // background-color: gray;
   @include coverdiv(fixed);
   pointer-events: none;
+}
+
+.button {
+  background-color: transparent;
+  color: inherit;
+  font-size: 16px;
+  border: 1px dashed var(--fg);
+  padding: 10px;
 }
