@@ -7,6 +7,7 @@ uniform float uDistortion;
 uniform float uStrength;
 uniform float uScale;
 uniform float uClicked;
+uniform float uCompleted;
 uniform float uTime;
 
 
@@ -33,7 +34,7 @@ vec4 transition(float ratio, in vec2 st) {
 
     float dist = distance(vDUv, vec2(0.5));
 
-    vec2 offset = dir * (sin(dist * 20.0 - uTime * 0.2) + 0.5) * 0.035 * uDistortion * (1. - uClicked);
+    vec2 offset = dir * (sin(dist * 20.0 - uTime * 0.2) + 0.5) * 0.035 * uDistortion * (1. - uCompleted);
     uv2 = uv2 + offset;
 
     uv2 += (sin(uv1.x * 20. + (uTime / 5.)) / 50.) * (1. - uScale);
@@ -79,7 +80,7 @@ void main() {
 
     vec4 multiplyTexture = img.rrra * roundblend * 0.1;
     vec4 multiplyTexture2 = img.rrra * roundblend2 * 0.3;
-    vec4 multiplyTexture3 = img.rrra * roundblend3 * 0.8;
+    vec4 multiplyTexture3 = img.rrra * roundblend3 * 0.6;
 
     vec4 finalTexture = img + multiplyTexture + multiplyTexture2 + multiplyTexture3;
 

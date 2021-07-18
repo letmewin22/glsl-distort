@@ -32,7 +32,8 @@ export default class Colors extends Figure {
     super.createMesh()
   }
 
-  onDark() {
+  onDark(e) {
+    e.stopPropagation()
     gsap.to(this.material.uniforms.uClicked, {
       duration: 1,
       value: 1,
@@ -42,7 +43,8 @@ export default class Colors extends Figure {
     emitter.emit('changeTheme', 1)
   }
 
-  onLight() {
+  onLight(e) {
+    e.stopPropagation()
     gsap.to(this.material.uniforms.uClicked, {
       duration: 1,
       value: 0,

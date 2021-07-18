@@ -22,6 +22,7 @@ export default class Images extends Figure {
       uScale: {value: 0},
       uLongScale: {value: 0.1},
       uClicked: {value: 0},
+      uCompleted: {value: 0},
       uHide: {value: 1},
       uStrength: {value: 0},
       uViewportY: {value: window.innerHeight},

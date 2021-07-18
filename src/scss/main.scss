@@ -33,6 +33,36 @@ body {
   height: 100vh;
 }
 
+.h1 {
+  text-transform: uppercase;
+  font-size: vw(220);
+  font-weight: 400;
+  width: vw(1800);
+  opacity: 0;
+  letter-spacing: -0.08em;
+  line-height: 0.8em;
+  margin-top: 40px;
+  user-select: none;
+}
+
+.word,
+.char,
+.char-inner {
+  display: inline-block;
+  line-height: 0.8em;
+}
+
+.char {
+  overflow: hidden;
+}
+
+.char-inner {
+  transform: translateY(110%);
+  left: vw(-11);
+  opacity: 0;
+  position: relative;
+}
+
 .cols {
   display: grid;
   grid-template-columns: vw(1031) vw(543);

@@ -1,11 +1,13 @@
 /* eslint-disable max-len */
-import cssWebP from '@/libs/testWebP'
 import {Scetch} from '@emotionagency/glhtml'
+import {SmoothScroll} from '@emotionagency/smoothscroll'
+import {raf} from '@emotionagency/utils'
+
+import cssWebP from '@/libs/testWebP'
 import Images from './GL9/Images/Images'
 import Colors from './GL9/Colors/Colors'
 import Noisy from './GL2/Noisy/Noisy'
-import {SmoothScroll} from '@emotionagency/smoothscroll'
-import {raf} from '@emotionagency/utils'
+import textAnimate from './textAnimate'
 
 cssWebP()
 const imgs = [...document.querySelectorAll('.js-gl-img')]
@@ -27,6 +29,13 @@ nodes = [
 
 window.addEventListener('load', () => {
   setTimeout(() => {
+    textAnimate.in()
+    let state = true
+    document.body.addEventListener('click', (e) => {
+      e.stopPropagation()
+      state ? textAnimate.out() : textAnimate.in()
+      state = !state
+    })
     window.ss = new SmoothScroll()
     window.scetch = new Scetch('#gl', {
       nodes,
@@ -41,6 +50,5 @@ window.addEventListener('load', () => {
       ],
       raf,
     })
-    // window.scetch = new Scene('#gl', imgs)
   }, 500)
 })

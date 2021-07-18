@@ -13,8 +13,8 @@ uniform float uDistortion;
 float transition(float ratio, in vec2 st) {
     vec2 p = st * 2. -1.;
 
-    float l = pow(length(p),0.5)/sqrt(2.0);
-    float ll = smoothstep(l-0.04, l+0.04, ratio);
+    float l = pow(length(p) / 2. , 0.5) / sqrt(2.0);
+    float ll = smoothstep(l - 0.04, l + 0.04, ratio);
 
     return ll;
 }
@@ -28,7 +28,7 @@ void main() {
   float scale = 800.;
   float d = uClicked;
 
-  pos.z += d * (transition(d, uv) * scale - scale * d);
+  pos.z += d * (transition(d, vUv) * scale - scale * d);
 
   vParallax = uScrollPos / uScrollHeight * 0.2 * uClicked;
 

@@ -2,7 +2,6 @@ import gsap from 'gsap'
 
 import emitter from 'tiny-emitter/instance'
 import {cloneNode} from '../../utils/cloneNode'
-import {ease as myEase} from '../../utils/ease'
 
 export const ease = 'power2.out'
 
@@ -54,12 +53,22 @@ export class FigureMouse {
       height,
       top,
       left,
-      ease: 'back.out(1.1)',
+      ease: 'power2.out',
       onComplete: () => {
         to.appendChild(this.instance.$el)
         this.instance.$el.style.position = 'static'
       },
     })
+
+    tl.to(
+      this.instance.material.uniforms.uCompleted,
+      {
+        value: 1,
+        duration,
+        ease,
+      },
+      duration,
+    )
 
     tl.to(
       items,
@@ -77,20 +86,11 @@ export class FigureMouse {
         duration,
         value: 1,
         ease: 'power2.inOut',
-        delay: 0.2,
       },
-      0,
+      0.1,
     )
 
     this.mouseEnter()
-
-    gsap.to(this.instance.material.uniforms.uLongScale, {
-      duration: 1,
-      value: 0,
-      delay: 0,
-      overwrite: true,
-      ease,
-    })
 
     this.instance.$el.removeEventListener('mouseleave', this.mouseLeave)
   }
@@ -106,24 +106,13 @@ export class FigureMouse {
       overwrite: true,
       ease,
     })
-    // gsap.to(document.body, {
-    //   duration: 1.6,
-    //   background: this.instance.$el.dataset.color,
-    //   overwrite: true,
-    //   ease,
-    // })
+
     gsap.to(this.instance.material.uniforms.uScale, {
       duration: 1.5,
       value: 1,
       delay: 0.1,
       overwrite: true,
       ease,
-    })
-    gsap.to(this.instance.material.uniforms.uLongScale, {
-      duration: 10,
-      value: 0,
-      overwrite: true,
-      ease: 'power1.out',
     })
   }
 
@@ -140,13 +129,6 @@ export class FigureMouse {
     gsap.to(this.instance.material.uniforms.uScale, {
       duration: 2,
       value: 0,
-      delay: 0,
-      overwrite: true,
-      ease: 'power4.out',
-    })
-    gsap.to(this.instance.material.uniforms.uLongScale, {
-      duration: 2,
-      value: 0.1,
       delay: 0,
       overwrite: true,
       ease: 'power4.out',
