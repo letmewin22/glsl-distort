@@ -1,4 +1,5 @@
 varying vec2 vUv;
+varying vec2 vDUv;
 varying float vParallax;
 
 uniform sampler2D uTexture;
@@ -13,9 +14,13 @@ vec4 tex(in vec2 st) { return texture2D(uTexture, st); }
 
 
 vec4 transition(float ratio, in vec2 st) {
-    vec2 p = st*2.-1.;
+    vec2 p = st * 2. -1.;
+    vec2 pD = vDUv * 2. -1.;
+
     float l = pow(length(p),0.5)/sqrt(2.0);
-    float ll = smoothstep(l-0.04, l+0.04, ratio);
+    float lD = pow(length(pD),0.5)/sqrt(2.0);
+
+    float ll = smoothstep(lD-0.04, lD+0.04, ratio);
     
     float w = .2;
     vec2 p1 = p*(1.+smoothstep(l-w*1.2, l+w, ratio));
@@ -25,12 +30,14 @@ vec4 transition(float ratio, in vec2 st) {
     vec2 uv2 = p2*0.5+0.5;
 
     vec2 dir = uv2 - vec2(0.5, 0.5);
-    float dist = distance(uv2, vec2(0.5));
+
+    float dist = distance(vDUv, vec2(0.5));
+
     vec2 offset = dir * (sin(dist * 20.0 - uTime * 0.2) + 0.5) * 0.035 * uDistortion * (1. - uClicked);
     uv2 = uv2 + offset;
 
     uv2 += (sin(uv1.x * 20. + (uTime / 5.)) / 50.) * (1. - uScale);
-    uv2 += (sin(uv1.y * 10. + (uTime / 5.)) / 50.) * (1. - uScale);
+    uv2 += (sin(uv2.y * 10. + (uTime / 5.)) / 50.) * (1. - uScale);
     
 
     return mix(tex(uv1), tex(uv2), ll);
@@ -55,8 +62,8 @@ void main() {
     float angle = 1.55;
 	vec2 newUv = uv;
 
-	newUv+= (sin(newUv.y*10. + (uTime / 5.)) / 500.) * (uStrength* 2.);
-	newUv+= (sin(newUv.x*10. + (uTime / 15.)) / 500.) * (uStrength * 2.);
+	newUv+= (sin(newUv.y*10. + (uTime / 5.)) / 500.) * (uStrength* 1.6);
+	newUv+= (sin(newUv.x*10. + (uTime / 15.)) / 500.) * (uStrength * 1.6);
 
 	vec2 offset = uStrength / 50.0 * vec2(cos(angle), sin(angle));
 

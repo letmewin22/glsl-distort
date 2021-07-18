@@ -15,5 +15,5 @@ void main() {
     vec3 color = fromRGB(vec3(253., 250., 243.));
     float gray = clamp(length(color) * rand(uv), 0.0, 1.0);
 
-    gl_FragColor = vec4(gray, gray, gray, uAlpha);
+    gl_FragColor = vec4(gray, gray, gray, uAlpha) * 0.5;
 }

@@ -2,7 +2,7 @@ import gsap from 'gsap'
 
 import emitter from 'tiny-emitter/instance'
 import {cloneNode} from '../../utils/cloneNode'
-// import {ease} from '../../utils/ease'
+import {ease as myEase} from '../../utils/ease'
 
 export const ease = 'power2.out'
 
@@ -54,7 +54,7 @@ export class FigureMouse {
       height,
       top,
       left,
-      ease: 'power3.inOut',
+      ease: 'power2.inOut',
       onComplete: () => {
         to.appendChild(this.instance.$el)
         this.instance.$el.style.position = 'static'
@@ -76,7 +76,7 @@ export class FigureMouse {
       {
         duration,
         value: 1,
-        ease: 'power3.inOut',
+        ease: 'power2.inOut',
       },
       0,
     )

@@ -13,7 +13,7 @@ body {
   color: #131116;
   overflow: hidden;
   height: 100vh;
-  background-color: 20%;
+  // background-color: 20%;
   font-family: Helvetica;
 }
 
@@ -120,6 +120,10 @@ body {
   z-index: -1;
 }
 
+#gl-2 {
+  z-index: -2;
+}
+
 .text {
   max-width: 300px;
   position: absolute;
@@ -149,6 +153,12 @@ body {
 }
 
 .noisy {
+  // background-color: gray;
+  @include coverdiv(fixed);
+  pointer-events: none;
+}
+
+.bg {
   // background-color: gray;
   @include coverdiv(fixed);
   pointer-events: none;
