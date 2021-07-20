@@ -23,7 +23,9 @@ body {
   height: 100vh;
   transition: color 0.3s ease;
   // background-color: 20%;
-  font-family: Helvetica;
+  font-family: 'Neue Haas Grotesk Display Pro', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+    'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 #scroll-container {
@@ -39,7 +41,7 @@ body {
   font-weight: 400;
   width: vw(1800);
   opacity: 0;
-  letter-spacing: -0.08em;
+  letter-spacing: -0.02em;
   line-height: 0.8em;
   margin-top: 40px;
   user-select: none;
@@ -57,8 +59,8 @@ body {
 }
 
 .char-inner {
-  transform: translateY(110%);
-  left: vw(-11);
+  transform: translateY(110%) scaleY(1.4);
+  // left: vw(-11);
   opacity: 0;
   position: relative;
 }
@@ -72,6 +74,9 @@ body {
   margin-top: 100px;
   margin-bottom: 100px;
   // padding-top: 1500px;
+  + .cols {
+    margin-top: 260px;
+  }
 }
 
 .js-hidden {
@@ -150,7 +155,8 @@ body {
 }
 
 #gl,
-#gl-2 {
+#gl-2,
+#gl-3 {
   position: fixed;
   top: 0;
   left: 0;
@@ -158,9 +164,35 @@ body {
   pointer-events: none;
   z-index: -1;
 }
+#gl {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
 
 #gl-2 {
   z-index: -2;
+}
+#gl-3 {
+  z-index: 100;
+  background-color: black;
+}
+
+.a-logo {
+  @include coverdiv(fixed);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vh;
+  height: 90vh;
+  // pointer-events: none;
+}
+
+.loader {
+  position: fixed;
+  top: 50px;
+  left: 50px;
+  z-index: 10;
 }
 
 .text {

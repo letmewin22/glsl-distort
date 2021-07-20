@@ -14,6 +14,10 @@ export default class Noisy extends Figure {
     emitter.on('changeTheme', this.animateAlpha)
   }
 
+  createGeometry() {
+    super.createGeometry({widthSegments: 1, heightSegments: 1})
+  }
+
   createMaterial() {
     const uniforms = {
       uAlpha: {value: 0.5},

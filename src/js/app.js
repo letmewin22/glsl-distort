@@ -8,6 +8,7 @@ import Images from './GL9/Images/Images'
 import Colors from './GL9/Colors/Colors'
 import Noisy from './GL2/Noisy/Noisy'
 import textAnimate from './textAnimate'
+import {Loader} from './components/Loader'
 
 cssWebP()
 const imgs = [...document.querySelectorAll('.js-gl-img')]
@@ -19,36 +20,44 @@ let nodes = imgs.map((img) => ({
   Figure: Images,
 }))
 
-nodes = [
-  ...nodes,
-  {
-    $el: noisy,
-    Figure: Noisy,
-  },
-]
+nodes = [...nodes]
 
 window.addEventListener('load', () => {
   setTimeout(() => {
-    textAnimate.in()
-    let state = true
-    document.body.addEventListener('click', (e) => {
-      e.stopPropagation()
-      state ? textAnimate.out() : textAnimate.in()
-      state = !state
-    })
     window.ss = new SmoothScroll()
     window.scetch = new Scetch('#gl', {
       nodes,
       raf,
     })
+
     window.scetch2 = new Scetch('#gl-2', {
       nodes: [
         {
           $el: colors,
           Figure: Colors,
         },
+        {
+          $el: noisy,
+          Figure: Noisy,
+        },
       ],
       raf,
     })
+
+    const loadingAnim = () => {
+      setTimeout(() => {
+        textAnimate.in()
+      }, 500)
+      const c = document.querySelector('#gl')
+      c.style.opacity = 1
+      let state = true
+      document.body.addEventListener('click', (e) => {
+        state ? textAnimate.out() : textAnimate.in()
+        state = !state
+      })
+    }
+
+    const l = new Loader(loadingAnim, 'webgl')
+    l.init()
   }, 500)
 })

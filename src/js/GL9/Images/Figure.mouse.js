@@ -30,10 +30,17 @@ export class FigureMouse {
   }
 
   mouseClick() {
+    this.instance.material.uniforms.uTexture.value = this.instance.bigTexture
     cloneNode(this.instance.$el)
     emitter.emit('animateImages')
+
+    window.ss.reset()
+    window.ss.state.scrolled = 0
+    window.ss.scrollbar.setHeight()
+    window.ss.isFixed = false
+
     const to = document.querySelector('.to')
-    const items = document.querySelector('.cols')
+    const items = document.querySelectorAll('.cols')
     const {width, height, top, left} = to.getBoundingClientRect()
 
     const tl = gsap.timeline()

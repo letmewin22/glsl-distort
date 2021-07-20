@@ -1,5 +1,7 @@
 import {lerp} from '@emotionagency/utils'
 import {Figure} from '@emotionagency/glhtml'
+import emitter from 'tiny-emitter/instance'
+
 import {FigureMouse} from './Figure.mouse'
 
 import fragment from './shaders/fragment.glsl'
@@ -11,6 +13,23 @@ export default class Images extends Figure {
 
     this.mouse = new FigureMouse(this)
     this.mouse.addEvents()
+  }
+
+  createGeometry() {
+    super.createGeometry({widthSegments: 64, heightSegments: 64})
+  }
+
+  async uploadTextures() {
+    const baseParams = 'f_webp,q_92'
+    const params = baseParams + ',' + 'c_scale,w_800'
+    const fileName = this.$el.dataset.src
+    const baseURL = 'https://res.cloudinary.com/emotion-agency/image/upload'
+    const link = `${baseURL}/${params}/${fileName}`
+    const link2 = `${baseURL}/${baseParams}/${fileName}`
+
+    this.texture = await this.uploadTexture(link)
+    this.bigTexture = await this.uploadTexture(link2)
+    emitter.emit('textureLoaded')
   }
 
   createMaterial() {
@@ -28,14 +47,14 @@ export default class Images extends Figure {
       uViewportY: {value: window.innerHeight},
       uScrollPos: {value: 0},
       uScrollHeight: {value: 0},
+      uOffsetY: {value: 0},
     }
 
     super.createMaterial({uniforms, vertex, fragment})
   }
 
   async createMesh() {
-    this.texture = await this.uploadTexture(this.$el.dataset.secondImage)
-
+    await this.uploadTextures()
     super.createMesh()
   }
 
@@ -71,8 +90,8 @@ export default class Images extends Figure {
       let strength = this.velocity / 250
       strength = lerp(this.material.uniforms.uStrength.value, strength, 0.08)
       this.material.uniforms.uStrength.value = strength
-      this.material.uniforms.uScrollPos.value = this.scrollPos
       this.material.uniforms.uScrollHeight.value = this.scrollHeight
+      this.material.uniforms.uOffsetY.value = this.offset.y
     }
   }
 

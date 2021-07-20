@@ -78,9 +78,9 @@ void main() {
 
     vec4 img = vec4(cr.r, cga.g, cb.b, cga.a);
 
-    vec4 multiplyTexture = img.rrra * roundblend * 0.1;
-    vec4 multiplyTexture2 = img.rrra * roundblend2 * 0.3;
-    vec4 multiplyTexture3 = img.rrra * roundblend3 * 0.6;
+    vec4 multiplyTexture = img * roundblend * 1.;
+    vec4 multiplyTexture2 = img * roundblend2 * 1.;
+    vec4 multiplyTexture3 = img * roundblend3 * 2.;
 
     vec4 finalTexture = img + multiplyTexture + multiplyTexture2 + multiplyTexture3;
 

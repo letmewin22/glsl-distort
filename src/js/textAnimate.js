@@ -2,19 +2,10 @@ import SplitType from 'split-type'
 import gsap from 'gsap'
 
 function shuffle(array) {
-  let currentIndex = array.length
-  let temporaryValue
-  let randomIndex
-
-  while (0 !== currentIndex) {
-    randomIndex = Math.floor(Math.random() * currentIndex)
-    currentIndex -= 1
-
-    temporaryValue = array[currentIndex]
-    array[currentIndex] = array[randomIndex]
-    array[randomIndex] = temporaryValue
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[array[i], array[j]] = [array[j], array[i]]
   }
-
   return array
 }
 
@@ -37,6 +28,7 @@ const textAnimate = () => {
       gsap.to($toAnimate, {
         duration: 1,
         y: '0%',
+        scaleY: 1,
         opacity: 1,
         ease: 'expo.out',
         stagger: 0.02,
@@ -47,6 +39,7 @@ const textAnimate = () => {
       gsap.to($toAnimate, {
         duration: 1,
         y: '110%',
+        scaleY: 1.4,
         opacity: 0,
         ease: 'expo.out',
         stagger: 0.01,

@@ -1,4 +1,4 @@
-import {Figure, OGL} from '@emotionagency/glhtml'
+import {Figure, Color} from '@emotionagency/glhtml'
 import gsap from 'gsap'
 import emitter from 'tiny-emitter/instance'
 
@@ -18,10 +18,14 @@ export default class Colors extends Figure {
     light.addEventListener('click', this.onLight)
   }
 
+  createGeometry() {
+    super.createGeometry({widthSegments: 1, heightSegments: 1})
+  }
+
   createMaterial() {
     const uniforms = {
-      uColor1: {value: new OGL.Color('#FDFAF3')},
-      uColor2: {value: new OGL.Color('#1F1F1F')},
+      uColor1: {value: new Color('#FDFAF3')},
+      uColor2: {value: new Color('#1F1F1F')},
       uClicked: {value: 0},
     }
 
