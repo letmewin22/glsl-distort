@@ -18,6 +18,11 @@ const colors = document.querySelector('.bg')
 let nodes = imgs.map((img) => ({
   $el: img,
   Figure: Images,
+  cover: {
+    state: true,
+    positionY: +JSON.parse(img.dataset.cover).y,
+    positionX: +JSON.parse(img.dataset.cover).x,
+  },
 }))
 
 nodes = [...nodes]

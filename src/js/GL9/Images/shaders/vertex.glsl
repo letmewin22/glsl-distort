@@ -41,7 +41,7 @@ void main() {
 
   float scrollValue = -uStrength * 20. * (1. - uClicked);
 
-  newPosition.z += sin(newPosition.y / uViewportY * 2. * PI + PI / 2.0) * scrollValue;
+  newPosition.z += cos(newPosition.y / uViewportY * 2. * PI) * scrollValue;
 
 
   gl_Position = projectionMatrix * newPosition;

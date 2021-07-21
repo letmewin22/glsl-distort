@@ -2,6 +2,7 @@ import {lerp} from '@emotionagency/utils'
 import {Figure} from '@emotionagency/glhtml'
 import emitter from 'tiny-emitter/instance'
 
+import {getImageFromCloud} from '@/utils/getImageFromCloud'
 import {FigureMouse} from './Figure.mouse'
 
 import fragment from './shaders/fragment.glsl'
@@ -20,12 +21,22 @@ export default class Images extends Figure {
   }
 
   async uploadTextures() {
-    const baseParams = 'f_webp,q_92'
-    const params = baseParams + ',' + 'c_scale,w_800'
     const fileName = this.$el.dataset.src
     const baseURL = 'https://res.cloudinary.com/emotion-agency/image/upload'
-    const link = `${baseURL}/${params}/${fileName}`
-    const link2 = `${baseURL}/${baseParams}/${fileName}`
+    const format = document.body.classList.contains('webp') ? 'webp' : undefined
+    const baseParams = {
+      baseURL,
+      fileName,
+      quality: 92,
+      format,
+    }
+
+    const link = getImageFromCloud({
+      ...baseParams,
+      width: 800,
+    })
+
+    const link2 = getImageFromCloud(baseParams)
 
     this.texture = await this.uploadTexture(link)
     this.bigTexture = await this.uploadTexture(link2)
